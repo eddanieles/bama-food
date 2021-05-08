@@ -1,12 +1,14 @@
 <template>
   <v-app-bar app clipped-left clipped-right color="primary" dark>
     <v-toolbar-title class="align-center d-flex">
-      <span class="logo-icon">
-        <img src="../../assets/logo-light-icon.png" />
-      </span>
-      <span class="logo-text ml-2">
-        <img src="../../assets/logo-light-text.png" class="mt-2" />
-      </span>
+      <router-link to="/home">
+        <span class="logo-icon">
+          <img src="../../assets/logo-light-icon.png" />
+        </span>
+        <span class="logo-text ml-2">
+          <img src="../../assets/logo-light-text.png" class="mt-2" />
+        </span>
+      </router-link>
     </v-toolbar-title>
     <v-app-bar-nav-icon
       class="d-block d-md-none"
