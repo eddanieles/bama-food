@@ -7,6 +7,11 @@ Vue.use(Vuex)
 
 const apiKey = 'UNQpLHagw0DG9ypq_WTn6IN38XIuMLjoEDuIOHayHpL5tgtIeRgmmzVcX6azn5Up8tZOkKaIfhLmf6CYNac3XRk4jbSygt4S663HNye3uh5ULWgbcJHhJMmmAwaWYHYx'
 // const client = yelp.client(apiKey)
+const corsBridge = 'https://cors.bridged.cc/'
+const yelpUrl = 'https://api.yelp.com/v3/'
+var headers = {
+    Authorization: `Bearer ${apiKey}`
+}
 
 export default new Vuex.Store({
     state: {
@@ -31,24 +36,40 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        search({ commit }, searchRequest) {
-            axios.get(`https://cors.bridged.cc/https://api.yelp.com/v3/businesses/search`, {
-                headers: {
-                    Authorization: `Bearer ${apiKey}`
-                },
+        businessSearch({ commit }, searchRequest) {
+            axios.get(`${corsBridge}${yelpUrl}businesses/search`, {
+                headers,
                 params: {
                     term: searchRequest.term,
                     location: searchRequest.location
                 }
                 })
                 .then((res) => {
-                    console.log(res)
+                    console.log('business search results: ', res.data)
                     commit('setSearchResults', res)
                 })
                 .catch((err) => {
                     console.log(err)
                 })
+        },
+        getCategories() {
+            axios.get(`${corsBridge}${yelpUrl}categories`, {
+                headers
+                })
+                .then((res) => {
+
+                    function onlyRestaurants(obj) {
+                        if (obj.parent_aliases.includes('restaurants') || obj.parent_aliases.includes('food')) {
+                            return obj
+                        }  
+                    }
+                    console.log('categories: ', res.data.categories.filter(onlyRestaurants))
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
+            
 
     }
 })

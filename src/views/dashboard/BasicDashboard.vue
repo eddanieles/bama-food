@@ -361,11 +361,25 @@ export default {
     }
   },
   beforeCreate() {
-      const searchRequest = {
-        term:'Four Barrel Coffee',
-        location: 'san francisco, ca'
-      };
-      this.$store.dispatch('search', searchRequest)
+      // const searchRequest = {
+      //   term:'Four Barrel Coffee',
+      //   location: 'san francisco, ca'
+      // };
+      // this.$store.dispatch('businessSearch', searchRequest);
+
+      // this.$store.dispatch('getCategories');
+
+
+    //   navigator.geolocation.getCurrentPosition(success);
+
+    //   function success(pos) {
+    //       var crd = pos.coords;
+
+    //       console.log('Your current position is:');
+    //       console.log(`Latitude : ${crd.latitude}`);
+    //       console.log(`Longitude: ${crd.longitude}`);
+    //       console.log(`More or less ${crd.accuracy} meters.`);
+    // }
     }
 };
 </script>
