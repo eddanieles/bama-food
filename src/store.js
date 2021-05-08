@@ -19,7 +19,9 @@ export default new Vuex.Store({
         Customizer_drawer: false,
         SidebarColor: 'white',
         SidebarBg: '',
-        searchResults: {}
+        searchResults: {},
+        latitude: '28.3772',
+        longitude: '-81.5707'
       },
     mutations: {
         SET_SIDEBAR_DRAWER (state, payload) {
@@ -33,6 +35,10 @@ export default new Vuex.Store({
         }, 
         setSearchResults(state, val) {
             state.searchResults = val
+        },
+        setCoordinates(state, val) {
+            state.longitude = val.longitude;
+            state.latitude = val.latitude
         }
     },
     actions: {
@@ -68,6 +74,20 @@ export default new Vuex.Store({
                 .catch((err) => {
                     console.log(err)
                 })
+
+        },
+        getLocationCoordinates({ commit }) {
+            navigator.geolocation.getCurrentPosition(success);
+            function success(pos) {
+                var crd = pos.coords;
+
+                // console.log('Your current position is:');
+                // console.log(`Latitude : ${crd.latitude}`);
+                // console.log(`Longitude: ${crd.longitude}`);
+                // console.log(`More or less ${crd.accuracy} meters.`);
+
+                commit('setCoordinates', crd)
+            }
         }
             
 

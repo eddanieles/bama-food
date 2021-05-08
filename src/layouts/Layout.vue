@@ -40,6 +40,9 @@ export default {
     ...mapMutations({
       setCustomizerDrawer: "SET_CUSTOMIZER_DRAWER"
     })
+  },
+  beforeCreate() {
+    this.$store.dispatch('getLocationCoordinates')
   }
 };
 </script>
