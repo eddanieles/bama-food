@@ -2,7 +2,7 @@
   <div>
     <p>Latitude: {{this.$store.state.latitude}} Longitude: {{this.$store.state.longitude}}</p>
     <p>Total Results: {{this.$store.state.searchResults.total}}</p>
-    <p>Center Location: Lat: {{this.$store.state.searchResults.region.center.latitude}} Lon: {{this.$store.state.searchResults.region.center.longitude}}</p>
+    <p>Center Location: (Latitude {{this.$store.state.searchResults.region ? this.$store.state.searchResults.region.center.latitude : ""}}, Longitude {{this.$store.state.searchResults.region ? this.$store.state.searchResults.region.center.longitude : ""}})</p>
     <div>
       {{this.$store.state.searchResults.businesses}}
     </div>
@@ -12,6 +12,7 @@
 <script>
 export default {
     beforeCreate() {
+
         let searchTerms = {
             latitude: this.$store.state.latitude,
             longitude: this.$store.state.longitude,
