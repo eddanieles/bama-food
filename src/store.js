@@ -42,17 +42,15 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        businessSearch({ commit }, searchRequest) {
+        businessSearch({ commit }, params) {
             axios.get(`${corsBridge}${yelpUrl}businesses/search`, {
                 headers,
-                params: {
-                    term: searchRequest.term,
-                    location: searchRequest.location
-                }
+                params 
                 })
                 .then((res) => {
-                    console.log('business search results: ', res.data)
-                    commit('setSearchResults', res)
+                    //res returns {...businesses, region.center (latitude, longitude), total}
+                    // console.log('business search results: ', res)
+                    commit('setSearchResults', res.data)
                 })
                 .catch((err) => {
                     console.log(err)
