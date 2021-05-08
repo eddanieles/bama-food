@@ -5,11 +5,16 @@
     <p>Center Location: (Latitude {{this.$store.state.searchResults.region ? this.$store.state.searchResults.region.center.latitude : ""}}, Longitude {{this.$store.state.searchResults.region ? this.$store.state.searchResults.region.center.longitude : ""}})</p>
     
     <div v-for="business in this.$store.state.searchResults.businesses" :key="business.id">
-        <b-card v-bind:img-src="`${business.image_url}`" img-height="350px" img-width="350px" img-alt="Card image" img-left class="mb-3">
+        <b-card 
+            v-bind:img-src="`${business.image_url}`" 
+            img-height="350px" 
+            img-width="350px" 
+            img-alt="Card image" 
+            img-left class="mb-3" 
+            v-bind:title="`${business.name}`">
+            <b-card-sub-title>{{business.categories.map(category => " " + category.title).toString()}}</b-card-sub-title>
             <b-card-text>
-                <p>name: {{business.name}}</p>
-                <p>url: {{business.url}}</p>
-                <p>categories: {{business.categories}}</p>
+                <br>
                 <p>
                     {{business.location.address1}} 
                     {{business.location.address2 ? business.location.address2 : ""}},
@@ -18,6 +23,7 @@
                 </p>
                 <p>distance: {{business.distance}}</p>
                 <p>rating: {{business.rating}}</p>
+                <a v-bind:href="`${business.url}`" target="_blank" class="yelpLink">Go to Yelp business page...</a>
             </b-card-text>
         </b-card>
     </div>
@@ -45,5 +51,10 @@ export default {
 </script>
 
 <style>
-
+.yelpLink {
+    font-size: small;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
 </style>
