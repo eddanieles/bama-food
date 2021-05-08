@@ -1,10 +1,5 @@
 <template>
   <v-container fluid class="down-top-padding">
-    <h1>Latitude: {{this.$store.state.latitude}}</h1>
-    <h1>Longitude: {{this.$store.state.longitude}}</h1>
-    <div>
-      {{this.$store.state.searchResults}}
-    </div>
     <v-row>
       <v-col cols="12" lg="8">
         <v-card>
@@ -364,20 +359,6 @@ export default {
 
       this.task = null;
     }
-  },
-  beforeCreate() {
-    const searchTerms = {
-      latitude: this.$store.state.latitude,
-      longitude: this.$store.state.longitude,
-      // attributes: "hot_and_new",
-      radius: 8050,
-      categories: "food,restaurants",
-      open_now: true
-    };
-    this.$store.dispatch('businessSearch', searchTerms);
-
-    // this.$store.dispatch('getCategories');
-
-    }
+  }
 };
 </script>
