@@ -21,8 +21,17 @@
                     {{business.location.city}}
                     {{business.location.zip_code}}
                 </p>
-                <p>distance: {{business.distance}}</p>
-                <p>rating: {{business.rating}}</p>
+                <p>{{parseFloat(convertToMiles(business.distance)).toFixed(2)}} 
+                    <span class="fs-6 fst-italic">miles away</span>
+                </p>
+                <p v-if="`${business.rating}`">rating:
+                    <star-rating 
+                        v-bind:increment=0.1 
+                        v-bind:rating="parseFloat(business.rating)"
+                        v-bind:read-only=true
+                        v-bind:inline=true
+                        />
+                 </p>
                 <a v-bind:href="`${business.url}`" target="_blank" class="yelpLink">Go to Yelp business page...</a>
             </b-card-text>
         </b-card>
@@ -31,7 +40,18 @@
 </template>
 
 <script>
+import StarRating from 'vue-star-rating'
+import conversions from 'conversions'
+
 export default {
+    components: {
+        StarRating
+    },
+    methods: {
+        convertToMiles(meters) {
+            return conversions(meters, "meters", "miles")
+        }
+    },
     beforeCreate() {
 
         let searchTerms = {
