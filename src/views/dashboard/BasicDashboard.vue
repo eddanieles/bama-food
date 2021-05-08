@@ -371,7 +371,6 @@ export default {
 
 
     //   navigator.geolocation.getCurrentPosition(success);
-
     //   function success(pos) {
     //       var crd = pos.coords;
 
