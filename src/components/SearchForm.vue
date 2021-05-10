@@ -10,11 +10,17 @@
                             label="Find"
                             label-for="input-1"
                         >
-                            <b-form-input
+                            <!-- <b-form-input
                                 id="input-1"
                                 placeholder="delivery, takeout, reservations..."
                                 v-model="searchTerms"
-                            ></b-form-input>
+                            ></b-form-input> -->
+                            <v-autocomplete
+                                label="delivery, takeout, restaurants..."
+                                :filter="this.customFilter"
+                                :items="this.options"
+                                v-model="searchTerms"
+                            ></v-autocomplete>
                         </b-form-group>
                     </b-col>
 
@@ -42,11 +48,14 @@
 </template>
 
 <script>
+import json from './categories.json'
+
 export default {
     data() {
         return {
             searchTerms: '',
-            location: ''
+            location: '',
+            options: json.categories.map(category => category.title)
         }
     },
     methods: {
@@ -57,9 +66,14 @@ export default {
                 location: this.location
             }
             this.$store.dispatch('businessSearch', params);
-        }
-    }
+        },
+        customFilter (item, queryText) {
+            const textTwo = item.toLowerCase()
+            const searchText = queryText.toLowerCase()
 
+            return textTwo.indexOf(searchText) > -1
+        },
+    }
 }
 </script>
 
