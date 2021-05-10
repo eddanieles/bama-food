@@ -34,6 +34,7 @@
                             id="input-2"
                             placeholder="Enter Location"
                             v-model="location"
+                            required
                             ></b-form-input>
                         </b-form-group>
                     </b-col>
