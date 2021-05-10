@@ -67,7 +67,7 @@ export default new Vuex.Store({
                             return obj
                         }  
                     }
-                    console.log('categories: ', res.data.categories.filter(onlyRestaurants))
+                    console.log('categories: ', res.data.categories.filter(onlyRestaurants).map(restaurant => restaurant.title))
                 })
                 .catch((err) => {
                     console.log(err)

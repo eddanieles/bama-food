@@ -4,6 +4,8 @@
     <p>Total Results: {{this.$store.state.searchResults.total}}</p>
     <p>Center Location: (Latitude {{this.$store.state.searchResults.region ? this.$store.state.searchResults.region.center.latitude : ""}}, Longitude {{this.$store.state.searchResults.region ? this.$store.state.searchResults.region.center.longitude : ""}})</p>
     
+    <search-form />
+
     <div v-for="business in this.$store.state.searchResults.businesses" :key="business.id">
         <b-card 
             v-bind:img-src="`${business.image_url}`" 
@@ -42,10 +44,12 @@
 <script>
 import StarRating from 'vue-star-rating'
 import conversions from 'conversions'
+import SearchForm from '../../components/SearchForm'
 
 export default {
     components: {
-        StarRating
+        StarRating,
+        SearchForm
     },
     methods: {
         convertToMiles(meters) {
@@ -60,7 +64,7 @@ export default {
             attributes: "hot_and_new",
             radius: 8050,
             categories: "food,restaurants",
-            open_now: true
+            // open_now: true
         };
         this.$store.dispatch('businessSearch', searchTerms);
 
