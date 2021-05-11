@@ -48,7 +48,28 @@ export default {
             return conversions(meters, "meters", "miles")
         },
         onClick(businessObj) {
-            console.log(businessObj)
+            let obj = {
+                createDate: Date.now(),
+                alias: businessObj.alias,
+                categories: businessObj.categories.map(category => {
+                    return {alias: category.alias, title: category.title}
+                }),
+                coordinates: {
+                    latitude: businessObj.coordinates.latitude,
+                    longitude: businessObj.coordinates.longitude
+                },
+                displayPhone: businessObj.display_phone,
+                yelpBusinessId: businessObj.id,
+                imageUrl: businessObj.image_url,
+                location: businessObj.location,
+                name: businessObj.name,
+                phone: businessObj.phone,
+                rating: businessObj.rating,
+                review_count: businessObj.review_count,
+                transactions: businessObj.transactions.map(transaction => transaction),
+                yelpUrl: businessObj.url
+            }
+            console.log(obj)
         }
     },
 }
