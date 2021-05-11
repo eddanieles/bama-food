@@ -29,6 +29,7 @@
                  </p>
                 <a v-bind:href="`${business.url}`" target="_blank" class="yelpLink">Go to Yelp business page...</a>
             </b-card-text>
+            <button type="button" class="btn btn-danger" @click="onClick(business)">Click Me!</button>
         </b-card>
   </div>
 </template>
@@ -45,6 +46,9 @@ export default {
     methods: {
         convertToMiles(meters) {
             return conversions(meters, "meters", "miles")
+        },
+        onClick(businessObj) {
+            console.log(businessObj)
         }
     },
 }
