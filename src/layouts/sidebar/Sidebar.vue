@@ -13,14 +13,14 @@
   >
     <v-list dense nav>
       <!---USer Area -->
-      <v-list-item two-line class="px-0">
+      <v-list-item two-line class="px-0" :v-show="this.$store.state.userProfile">
         <v-list-item-avatar>
-          <img src="../../assets/background/user1.jpg" />
+          <img v-bind:src="this.$store.state.userProfile.profileImage" />
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>Dohn Deo</v-list-item-title>
-          <v-list-item-subtitle class="caption">Webdesigner</v-list-item-subtitle>
+          <v-list-item-title>{{this.$store.state.userProfile.firstName}} {{this.$store.state.userProfile.lastName}}</v-list-item-title>
+          <v-list-item-subtitle class="caption">{{this.$store.state.userProfile.email}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <!---USer Area -->
@@ -106,7 +106,10 @@ export default {
     }
   },
 
-  methods: {}
+  methods: {},
+  beforeCreate() {
+    // console.log(this.$store.state.userProfile)
+  }
 };
 </script>
 <style lang="scss">

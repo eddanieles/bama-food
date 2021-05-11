@@ -16,7 +16,7 @@
     />
     <v-spacer />
     <!---right part -->
-    <v-btn dark color="success" href="https://www.wrappixel.com/templates/materialpro-vuetify-admin/">Upgrade to Pro</v-btn>
+    <!-- <v-btn dark color="success" href="https://www.wrappixel.com/templates/materialpro-vuetify-admin/">Upgrade to Pro</v-btn> -->
     <v-menu bottom left transition="scale-transition">
       <template v-slot:activator="{ on }">
         <v-btn dark icon v-on="on">
@@ -25,9 +25,11 @@
       </template>
 
       <v-list>
-        <v-list-item v-for="(item, i) in userprofile" :key="i" @click="href">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+        <v-list-item>My Profile</v-list-item>
+        <v-list-item>My Balance</v-list-item>
+        <v-list-item>Inbox</v-list-item>
+        <v-list-item>Account Setting</v-list-item>
+        <v-list-item @click="logout">Logout</v-list-item>
       </v-list>
     </v-menu>
   </v-app-bar>
@@ -47,13 +49,6 @@ export default {
     }
   },
   data: () => ({
-    userprofile: [
-      { title: "My Profile" },
-      { title: "My Balance" },
-      { title: "Inbox" },
-      { title: "Account Setting" },
-      { title: "Logout" }
-    ],
     href() {
       return undefined;
     }
@@ -66,7 +61,10 @@ export default {
   methods: {
     ...mapMutations({
       setSidebarDrawer: "SET_SIDEBAR_DRAWER"
-    })
+    }),
+    logout() {
+      this.$store.dispatch('logout')
+    }
   }
 };
 </script>
