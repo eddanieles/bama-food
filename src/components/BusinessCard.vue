@@ -64,6 +64,7 @@ export default {
                 location: businessObj.location,
                 name: businessObj.name,
                 phone: businessObj.phone,
+                price: businessObj.price,
                 rating: businessObj.rating,
                 review_count: businessObj.review_count,
                 transactions: businessObj.transactions.map(transaction => transaction),
