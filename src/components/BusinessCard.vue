@@ -29,7 +29,8 @@
                  </p>
                 <a v-bind:href="`${business.url}`" target="_blank" class="yelpLink">Go to Yelp business page...</a>
             </b-card-text>
-            <button type="button" class="btn btn-danger" @click="onClick(business)">Click Me!</button>
+            <button type="button" class="btn btn-primary" @click="addToFavorites(business)">Add to Favorites</button>
+            <button type="button" class="btn btn-info" @click="addToTrylist(business)">Add to Trylist</button>
         </b-card>
   </div>
 </template>
@@ -37,6 +38,7 @@
 <script>
 import StarRating from 'vue-star-rating'
 import conversions from 'conversions'
+import { auth } from '../firebase'
 
 export default {
     props: ['business'],
@@ -44,11 +46,9 @@ export default {
         StarRating
     },
     methods: {
-        convertToMiles(meters) {
-            return conversions(meters, "meters", "miles")
-        },
-        onClick(businessObj) {
+        cleanData(businessObj) {
             let obj = {
+                userId: auth.currentUser.uid,
                 createDate: Date.now(),
                 alias: businessObj.alias,
                 categories: businessObj.categories.map(category => {
@@ -69,9 +69,20 @@ export default {
                 transactions: businessObj.transactions.map(transaction => transaction),
                 yelpUrl: businessObj.url
             }
-            console.log(obj)
+            return obj;
+        },
+        convertToMiles(meters) {
+            return conversions(meters, "meters", "miles")
+        },
+        addToFavorites(businessObj) {
+            let res = this.cleanData(businessObj);
+            this.$store.dispatch('addToFavorites', res)
+        },
+        addToTrylist(businessObj) {
+            let res = this.cleanData(businessObj);
+            this.$store.dispatch('addToTrylist', res)  
         }
-    },
+    }
 }
 </script>
 

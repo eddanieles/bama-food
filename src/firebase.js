@@ -15,15 +15,19 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig)
 
 // utils
-const db = firebase.firestore()
-const auth = firebase.auth()
+const db = firebase.firestore();
+const auth = firebase.auth();
 
 // collection references
-const usersCollection = db.collection('users')
+const usersCollection = db.collection('users');
+const favoritesCollection = db.collection('favorites');
+const trylistCollection = db. collection('trylist');
 
 // export utils/refs
 export {
     db,
     auth,
-    usersCollection
+    usersCollection,
+    favoritesCollection,
+    trylistCollection
 }

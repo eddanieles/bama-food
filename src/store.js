@@ -133,8 +133,15 @@ export default new Vuex.Store({
 
             // redirect to login view
             router.push('/login')
+        },
+        async addToFavorites({ commit }, businessObj)  {
+            console.log(commit);
+            await fb.favoritesCollection.add(businessObj);
+        },
+        async addToTrylist({ commit }, businessObj)  {
+            console.log(commit);
+            await fb.trylistCollection.add(businessObj);
         }
-            
 
     }
 })
