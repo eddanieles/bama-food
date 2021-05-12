@@ -27,6 +27,7 @@
     "vuelidate": "^0.7.4",
     "vuetify": "^2.3.14",
     "vuex": "^3.5.1",
+    "vuex-persistedstate": "^4.0.0-beta.3",
     "yelp-fusion": "^3.0.0"
   },
   "devDependencies": {

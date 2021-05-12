@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate"
 // import yelp from 'yelp-fusion'
 import axios from 'axios'
 import * as fb from './firebase'
@@ -25,7 +26,8 @@ export default new Vuex.Store({
         latitude: '28.3772',
         longitude: '-81.5707',
         userProfile: {}
-      },
+    },
+    plugins: [createPersistedState()],
     mutations: {
         SET_SIDEBAR_DRAWER (state, payload) {
             state.Sidebar_drawer = payload
