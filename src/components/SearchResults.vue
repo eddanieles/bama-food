@@ -8,15 +8,17 @@
 
 <script>
 import BusinessCard from './BusinessCard.vue';
-import { auth } from '../firebase'
 
 export default {
     components: {
         BusinessCard
     },
-    beforeMount() {
-        // console.log(auth.currentUser.uid)
-        this.$store.dispatch('getFavorites', auth.currentUser.uid) 
+    beforeCreate() {
+        console.log("this.$store.state.userProfile", this.$store.state.userProfile)
+        this.$store.dispatch('getFavorites', this.$store.state.userProfile.id) 
+    },
+    created() {
+      console.log("this.$store.state.userFavorites", this.$store.state.userFavorites)
     }
 }
 

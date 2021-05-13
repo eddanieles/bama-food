@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from "vuex-persistedstate"
+// import createPersistedState from "vuex-persistedstate"
 // import yelp from 'yelp-fusion'
 import axios from 'axios'
 import * as fb from './firebase'
@@ -28,7 +28,7 @@ export default new Vuex.Store({
         userProfile: {},
         userFavorites: []
     },
-    plugins: [createPersistedState()],
+    // plugins: [createPersistedState()],
     mutations: {
         SET_SIDEBAR_DRAWER (state, payload) {
             state.Sidebar_drawer = payload
@@ -122,10 +122,12 @@ export default new Vuex.Store({
         },
         async fetchUserProfile({ commit }, user) {
             // fetch user profile
-            const userProfile = await fb.usersCollection.doc(user.uid).get()
+            const userRef = await fb.usersCollection.doc(user.uid).get()
 
+            let userProfile = userRef.data();
+            userProfile.id = userRef.id;
             // set user profile in state
-            commit('setUserProfile', userProfile.data())
+            commit('setUserProfile', userProfile);
 
             // change route to dashboard
             router.push('/home')
@@ -149,7 +151,7 @@ export default new Vuex.Store({
             await fb.trylistCollection.add(businessObj);
         },
         async getFavorites({ commit }, userId) {
-            let favoritesArr = []
+            let favoritesArr = [];
             fb.favoritesCollection.where("userId", "==", userId)
                 .get()
                 .then((querySnapshot) => {
@@ -158,7 +160,7 @@ export default new Vuex.Store({
                     });
                 })
                 .then(() => {
-                    console.log('favoritesArr', favoritesArr)
+                    // console.log('favoritesArr', favoritesArr)
                     commit('setUserFavorites', favoritesArr)
                 })
                 .catch((error) => {
