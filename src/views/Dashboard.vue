@@ -8,11 +8,11 @@
                 label="I really want:"
                 >
                     <v-autocomplete
-                        @change="onChange"
+                        @change="onChange(0,wantTerms)"
                         :label="this.userCuisineArr[0]"
                         v-bind:filter="this.customFilter"
                         :items="this.options"
-                        v-model="searchTerms"
+                        v-model="wantTerms"
                     ></v-autocomplete>
                 </b-form-group>
             </b-col>
@@ -22,9 +22,11 @@
                 label="I kinda want:"
                 >
                     <v-autocomplete
+                        @change="onChange(1,kindaTerms)"
                         :label="this.userCuisineArr[1]"
                         v-bind:filter="this.customFilter"
                         :items="this.options"
+                        v-model="kindaTerms"
                     ></v-autocomplete>
                 </b-form-group>
             </b-col>
@@ -34,9 +36,11 @@
                 label="I can eat:"
                 >
                     <v-autocomplete
+                        @change="onChange(2,canEatTerms)"
                         :label="this.userCuisineArr[2]"
                         v-bind:filter="this.customFilter"
                         :items="this.options"
+                        v-model="canEatTerms"
                     ></v-autocomplete>
                 </b-form-group>
             </b-col>
@@ -63,6 +67,7 @@
 <script>
 import BusinessCard from '../components/BusinessCard'
 import json from '../components/categories.json'
+import _ from 'underscore'
 import { usersCollection } from '../firebase'
 
 export default {
@@ -73,7 +78,9 @@ export default {
         return {
             userCuisineArr: this.$store.state.userProfile.inMoodFor.map(cuisine => cuisine.title),
             options: json.categories.map(category => category.title),
-            searchTerms: ''
+            wantTerms: '',
+            kindaTerms: '',
+            canEatTerms: ''
         }
     },
     methods: {
@@ -83,10 +90,16 @@ export default {
 
             return textTwo.indexOf(searchText) > -1
         },
-        onChange(event) {
-            event.preventDefault
+        onChange(index, terms) {
+            event.preventDefault();
+            // console.log(index)
+            // console.log(terms)
+            var categoryObject = _.find(json.categories, category => {
+                return category.title === terms;
+            })
+            // console.log(categoryObject);
             let cacheMoodArr = this.$store.state.userProfile.inMoodFor;
-            cacheMoodArr[0].title = this.searchTerms;
+            cacheMoodArr[index] = categoryObject;
 
             console.log(cacheMoodArr)
 
