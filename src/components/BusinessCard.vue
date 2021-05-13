@@ -1,7 +1,7 @@
 <template>
   <div>
       <b-card 
-            v-bind:img-src="`${business.image_url}`" 
+            v-bind:img-src="`${business.image_url ? business.image_url : business.imageUrl}`" 
             img-height="350px" 
             img-width="350px" 
             img-alt="Card image" 
@@ -16,7 +16,7 @@
                     {{business.location.city}}
                     {{business.location.zip_code}}
                 </p>
-                <p>{{parseFloat(convertToMiles(business.distance)).toFixed(2)}} 
+                <p v-if="business.distance">{{parseFloat(convertToMiles(business.distance)).toFixed(2)}} 
                     <span class="fs-6 fst-italic">miles away</span>
                 </p>
                 <p v-if="`${business.rating}`">rating:

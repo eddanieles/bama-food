@@ -86,6 +86,12 @@ export default {
         title: "Basic Table",
         icon: "mdi-table-column-width",
         to: "/pages/tables-simple"
+      },
+
+      {
+        title: "User Dashboard",
+        icon: "mdi-view-dashboard",
+        to: "/dashboard"
       }
     ]
   }),

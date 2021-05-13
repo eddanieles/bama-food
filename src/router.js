@@ -53,6 +53,12 @@ export default new Router({
                     name: 'Login',
                     path: 'login',
                     component: () => import('@/views/Login'),
+                },
+
+                {
+                    name: 'User Dashboard',
+                    path: 'dashboard',
+                    component: () => import('@/views/Dashboard'),
                 }
 
             ]
