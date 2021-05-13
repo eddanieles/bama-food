@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import SearchForm from '../../components/SearchForm'
-import SearchResults from '../../components/SearchResults.vue';
+import SearchForm from '../components/SearchForm'
+import SearchResults from '../components/SearchResults.vue';
 
 export default {
     components: {

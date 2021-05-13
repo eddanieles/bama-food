@@ -46,13 +46,13 @@ export default new Router({
                 {
                     name: 'Home',
                     path: 'home',
-                    component: () => import('@/views/pages/Home'),
+                    component: () => import('@/views/Home'),
                 },
 
                 {
                     name: 'Login',
                     path: 'login',
-                    component: () => import('@/views/pages/Login'),
+                    component: () => import('@/views/Login'),
                 }
 
             ]
