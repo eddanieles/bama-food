@@ -56,7 +56,7 @@ export default {
     },
     methods: {
         checkFavorite(businessId) {
-            return _.indexOf(this.$store.state.favorites, businessId) === -1 ? true : false;
+            return _.indexOf(this.$store.state.userFavorites, businessId) === -1 ? true : false;
         },
         cleanData(businessObj) {
             let obj = {
