@@ -33,7 +33,9 @@
                 <button type="button" class="btn btn-primary" @click="addToFavorites(business)">Add to Favorites</button>
             </div>
             
-            <button type="button" class="btn btn-info" @click="addToTrylist(business)">Add to Trylist</button>
+            <div v-if="this.checkTrylist(business.id)">
+                <button type="button" class="btn btn-info" @click="addToTrylist(business)">Add to Trylist</button>
+            </div>
         </b-card>
   </div>
 </template>
@@ -57,6 +59,9 @@ export default {
     methods: {
         checkFavorite(businessId) {
             return _.indexOf(this.$store.state.userFavorites.map(favorite => favorite.yelpBusinessId), businessId) === -1 ? true : false;
+        },
+        checkTrylist(businessId) {
+            return _.indexOf(this.$store.state.userTrylist.map(business => business.yelpBusinessId), businessId) === -1 ? true : false;
         },
         cleanData(businessObj) {
             let obj = {
