@@ -29,7 +29,10 @@
                  </p>
                 <a v-bind:href="`${business.url}`" target="_blank" class="yelpLink">Go to Yelp business page...</a>
             </b-card-text>
-            <button type="button" class="btn btn-primary" @click="addToFavorites(business)">Add to Favorites</button>
+            <div v-if="this.checkFavorite(business.id)">
+                <button type="button" class="btn btn-primary" @click="addToFavorites(business)">Add to Favorites</button>
+            </div>
+            
             <button type="button" class="btn btn-info" @click="addToTrylist(business)">Add to Trylist</button>
         </b-card>
   </div>
@@ -39,13 +42,22 @@
 import StarRating from 'vue-star-rating'
 import conversions from 'conversions'
 import { auth } from '../firebase'
+import _ from 'underscore'
 
 export default {
+    data() {
+        return {
+            
+        }
+    },
     props: ['business'],
     components: {
         StarRating
     },
     methods: {
+        checkFavorite(businessId) {
+            return _.indexOf(this.$store.state.favorites, businessId) === -1 ? true : false;
+        },
         cleanData(businessObj) {
             let obj = {
                 userId: auth.currentUser.uid,
@@ -64,7 +76,7 @@ export default {
                 location: businessObj.location,
                 name: businessObj.name,
                 phone: businessObj.phone,
-                price: businessObj.price,
+                price: businessObj.price ? businessObj.price : "",
                 rating: businessObj.rating,
                 review_count: businessObj.review_count,
                 transactions: businessObj.transactions.map(transaction => transaction),

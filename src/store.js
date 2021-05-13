@@ -25,7 +25,8 @@ export default new Vuex.Store({
         searchResults: {},
         latitude: '28.3772',
         longitude: '-81.5707',
-        userProfile: {}
+        userProfile: {},
+        userFavorites: []
     },
     plugins: [createPersistedState()],
     mutations: {
@@ -47,6 +48,9 @@ export default new Vuex.Store({
         },
         setUserProfile(state, val) {
             state.userProfile = val
+        },
+        setUserFavorites(state, val) {
+            state.userFavorites = val
         }
     },
     actions: {
@@ -143,7 +147,25 @@ export default new Vuex.Store({
         async addToTrylist({ commit }, businessObj)  {
             console.log(commit);
             await fb.trylistCollection.add(businessObj);
+        },
+        async getFavorites({ commit }, userId) {
+            let favoritesArr = []
+            fb.favoritesCollection.where("userId", "==", userId)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        favoritesArr.push(doc.data().yelpBusinessId)
+                    });
+                })
+                .then(() => {
+                    console.log('favoritesArr', favoritesArr)
+                    commit('setUserFavorites', favoritesArr)
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
+            
+            
         }
-
     }
 })
