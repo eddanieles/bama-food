@@ -8,9 +8,11 @@
                 label="I really want:"
                 >
                     <v-autocomplete
+                        @change="onChange"
                         :label="this.userCuisineArr[0]"
                         v-bind:filter="this.customFilter"
                         :items="this.options"
+                        v-model="searchTerms"
                     ></v-autocomplete>
                 </b-form-group>
             </b-col>
@@ -61,6 +63,7 @@
 <script>
 import BusinessCard from '../components/BusinessCard'
 import json from '../components/categories.json'
+import { usersCollection } from '../firebase'
 
 export default {
     components: {
@@ -69,7 +72,8 @@ export default {
     data() {
         return {
             userCuisineArr: this.$store.state.userProfile.inMoodFor.map(cuisine => cuisine.title),
-            options: json.categories.map(category => category.title)
+            options: json.categories.map(category => category.title),
+            searchTerms: ''
         }
     },
     methods: {
@@ -78,6 +82,25 @@ export default {
             const searchText = queryText.toLowerCase()
 
             return textTwo.indexOf(searchText) > -1
+        },
+        onChange(event) {
+            event.preventDefault
+            let cacheMoodArr = this.$store.state.userProfile.inMoodFor;
+            cacheMoodArr[0].title = this.searchTerms;
+
+            console.log(cacheMoodArr)
+
+            var userRef = usersCollection.doc(this.$store.state.userProfile.id);
+            return userRef.update({
+                inMoodFor: cacheMoodArr
+            })
+            .then(() => {
+                console.log("Document successfully updated!");
+            })
+            .catch((error) => {
+                // The document probably doesn't exist.
+                console.error("Error updating document: ", error);
+            });
         }
     }
 }
