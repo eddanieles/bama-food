@@ -137,7 +137,8 @@ export default new Vuex.Store({
             await fb.auth.signOut()
 
             // clear user data from state
-            commit('setUserProfile', {})
+            commit('setUserProfile', {});
+            commit('setUserFavorites', []);
 
             // redirect to login view
             router.push('/login')
@@ -156,7 +157,7 @@ export default new Vuex.Store({
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                        favoritesArr.push(doc.data().yelpBusinessId)
+                        favoritesArr.push(doc.data())
                     });
                 })
                 .then(() => {

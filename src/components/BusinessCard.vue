@@ -56,7 +56,7 @@ export default {
     },
     methods: {
         checkFavorite(businessId) {
-            return _.indexOf(this.$store.state.userFavorites, businessId) === -1 ? true : false;
+            return _.indexOf(this.$store.state.userFavorites.map(favorite => favorite.yelpBusinessId), businessId) === -1 ? true : false;
         },
         cleanData(businessObj) {
             let obj = {
