@@ -2,6 +2,44 @@
   <div>
     <b-container>
         <b-row>
+            <h1>In the mood for...</h1>
+            <b-col>
+                <b-form-group
+                label="I really want:"
+                >
+                    <v-autocomplete
+                        :label="this.userCuisineArr[0]"
+                        v-bind:filter="this.customFilter"
+                        :items="this.options"
+                    ></v-autocomplete>
+                </b-form-group>
+            </b-col>
+
+           <b-col>
+                <b-form-group
+                label="I kinda want:"
+                >
+                    <v-autocomplete
+                        :label="this.userCuisineArr[1]"
+                        v-bind:filter="this.customFilter"
+                        :items="this.options"
+                    ></v-autocomplete>
+                </b-form-group>
+            </b-col>
+
+            <b-col>
+                <b-form-group
+                label="I can eat:"
+                >
+                    <v-autocomplete
+                        :label="this.userCuisineArr[2]"
+                        v-bind:filter="this.customFilter"
+                        :items="this.options"
+                    ></v-autocomplete>
+                </b-form-group>
+            </b-col>
+        </b-row>
+        <b-row>
             <b-col cols="6">
                 <h1>Favorites</h1>
                 <div v-for="business in this.$store.state.userFavorites" :key="business.id">
@@ -21,11 +59,26 @@
 </template>
 
 <script>
-import BusinessCard from '../components/BusinessCard';
+import BusinessCard from '../components/BusinessCard'
+import json from '../components/categories.json'
 
 export default {
     components: {
         BusinessCard
+    },
+    data() {
+        return {
+            userCuisineArr: this.$store.state.userProfile.inMoodFor.map(cuisine => cuisine.title),
+            options: json.categories.map(category => category.title)
+        }
+    },
+    methods: {
+        customFilter (item, queryText) {
+            const textTwo = item.toLowerCase()
+            const searchText = queryText.toLowerCase()
+
+            return textTwo.indexOf(searchText) > -1
+        }
     }
 }
 </script>
