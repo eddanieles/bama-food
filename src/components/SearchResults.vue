@@ -14,11 +14,12 @@ export default {
         BusinessCard
     },
     beforeCreate() {
-        console.log("this.$store.state.userProfile", this.$store.state.userProfile)
-        this.$store.dispatch('getFavorites', this.$store.state.userProfile.id) 
+        // console.log("this.$store.state.userProfile", this.$store.state.userProfile)
+        this.$store.dispatch('getFavorites', this.$store.state.userProfile.id);
+        this.$store.dispatch('getTryList', this.$store.state.userProfile.id);
     },
     created() {
-      console.log("this.$store.state.userFavorites", this.$store.state.userFavorites)
+      // console.log("this.$store.state.userFavorites", this.$store.state.userFavorites)
     }
 }
 

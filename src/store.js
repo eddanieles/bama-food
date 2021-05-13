@@ -26,7 +26,8 @@ export default new Vuex.Store({
         latitude: '28.3772',
         longitude: '-81.5707',
         userProfile: {},
-        userFavorites: []
+        userFavorites: [],
+        userTrylist: []
     },
     plugins: [createPersistedState()],
     mutations: {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
         },
         setUserFavorites(state, val) {
             state.userFavorites = val
+        },
+        setUserTrylist(state, val) {
+            state.userTrylist = val
         }
     },
     actions: {
@@ -163,6 +167,25 @@ export default new Vuex.Store({
                 .then(() => {
                     // console.log('favoritesArr', favoritesArr)
                     commit('setUserFavorites', favoritesArr)
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
+            
+            
+        },
+        async getTryList({ commit }, userId) {
+            let tryListArr = [];
+            fb.trylistCollection.where("userId", "==", userId)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        tryListArr.push(doc.data())
+                    });
+                })
+                .then(() => {
+                    // console.log('tryListArr', tryListArr)
+                    commit('setUserTrylist', tryListArr)
                 })
                 .catch((error) => {
                     console.log("Error getting documents: ", error);
