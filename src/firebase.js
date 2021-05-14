@@ -21,7 +21,8 @@ const auth = firebase.auth();
 // collection references
 const usersCollection = db.collection('users');
 const favoritesCollection = db.collection('favorites');
-const trylistCollection = db. collection('trylist');
+const trylistCollection = db.collection('trylist');
+const networkCollection = db.collection('network');
 
 // export utils/refs
 export {
@@ -29,5 +30,6 @@ export {
     auth,
     usersCollection,
     favoritesCollection,
-    trylistCollection
+    trylistCollection,
+    networkCollection
 }

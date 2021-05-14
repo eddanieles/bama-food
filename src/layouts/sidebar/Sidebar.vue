@@ -92,6 +92,12 @@ export default {
         title: "User Dashboard",
         icon: "mdi-view-dashboard",
         to: "/dashboard"
+      },
+
+      {
+        title: "Friends",
+        icon: "mdi-account-group-outline",
+        to: "/friends"
       }
     ]
   }),

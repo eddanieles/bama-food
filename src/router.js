@@ -59,6 +59,12 @@ export default new Router({
                     name: 'User Dashboard',
                     path: 'dashboard',
                     component: () => import('@/views/Dashboard'),
+                },
+
+                {
+                    name: 'Friends',
+                    path: 'friends',
+                    component: () => import('@/views/Friends'),
                 }
 
             ]
