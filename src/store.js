@@ -72,24 +72,24 @@ export default new Vuex.Store({
                     console.log(err)
                 })
         },
-        getCategories() {
-            axios.get(`${corsBridge}${yelpUrl}categories`, {
-                headers
-                })
-                .then((res) => {
+        // getCategories() {
+        //     axios.get(`${corsBridge}${yelpUrl}categories`, {
+        //         headers
+        //         })
+        //         .then((res) => {
 
-                    function onlyRestaurants(obj) {
-                        if (obj.parent_aliases.includes('restaurants') || obj.parent_aliases.includes('food')) {
-                            return obj
-                        }  
-                    }
-                    console.log('categories: ', res.data.categories.filter(onlyRestaurants).map(restaurant => restaurant.title))
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+        //             function onlyRestaurants(obj) {
+        //                 if (obj.parent_aliases.includes('restaurants') || obj.parent_aliases.includes('food')) {
+        //                     return obj
+        //                 }  
+        //             }
+        //             console.log('categories: ', res.data.categories.filter(onlyRestaurants).map(restaurant => restaurant.title))
+        //         })
+        //         .catch((err) => {
+        //             console.log(err)
+        //         })
 
-        },
+        // },
         getLocationCoordinates({ commit }) {
             navigator.geolocation.getCurrentPosition(success);
             function success(pos) {
