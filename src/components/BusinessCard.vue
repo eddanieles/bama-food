@@ -43,7 +43,7 @@
 <script>
 import StarRating from 'vue-star-rating'
 import conversions from 'conversions'
-import { auth } from '../firebase'
+import { auth, favoritesCollection, trylistCollection } from '../firebase'
 import _ from 'underscore'
 
 export default {
@@ -94,11 +94,11 @@ export default {
         },
         addToFavorites(businessObj) {
             let res = this.cleanData(businessObj);
-            this.$store.dispatch('addToFavorites', res)
+            favoritesCollection.add(res);
         },
         addToTrylist(businessObj) {
             let res = this.cleanData(businessObj);
-            this.$store.dispatch('addToTrylist', res)  
+            trylistCollection.add(res);
         }
     }
 }
