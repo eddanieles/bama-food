@@ -1,7 +1,7 @@
 <template>
   <div>
       <div v-for="business in this.$store.state.searchResults.businesses" :key="business.id">
-        <business-card v-bind:business = business />
+        <business-card :business=business />
     </div>
   </div>
 </template>

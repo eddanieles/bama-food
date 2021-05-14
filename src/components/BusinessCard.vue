@@ -4,7 +4,7 @@
             v-bind:img-src="`${business.image_url ? business.image_url : business.imageUrl}`" 
             img-height="350px" 
             img-width="350px" 
-            img-alt="Card image" 
+            img-alt="Image not found." 
             img-left class="mb-3" 
             v-bind:title="`${business.name}`">
             <b-card-sub-title>{{business.categories.map(category => " " + category.title).toString()}}</b-card-sub-title>

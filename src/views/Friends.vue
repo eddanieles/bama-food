@@ -1,17 +1,23 @@
 <template>
   <div>
         <h1>Friends</h1>
-        <div>{{this.friends}}</div>
+        <div v-for="friend in this.friends" :key="friend.id">
+            <user-card :user=friend />
+        </div>
 
         <h1>All Users</h1>
-        <div>{{this.allUsers}}</div>
+        <div v-for="user in this.allUsers" :key="user.id">
+            <user-card :user=user />
+        </div>
   </div>
 </template>
 
 <script>
+import UserCard from '../components/UserCard.vue';
 import { networkCollection, usersCollection } from '../firebase'
 
 export default {
+    components: { UserCard },
     data() {
         return {
             friends: [],
