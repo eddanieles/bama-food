@@ -1,7 +1,10 @@
 <template>
   <div>
-      <h1>Friends</h1>
-      <div>{{this.friends}}</div>
+        <h1>Friends</h1>
+        <div>{{this.friends}}</div>
+
+        <h1>All Users</h1>
+        <div>{{this.allUsers}}</div>
   </div>
 </template>
 
@@ -11,7 +14,8 @@ import { networkCollection, usersCollection } from '../firebase'
 export default {
     data() {
         return {
-            friends: []
+            friends: [],
+            allUsers: []
         }
     },
     beforeCreate() {
@@ -35,6 +39,13 @@ export default {
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
+
+        usersCollection.get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // console.log(doc.id, " => ", doc.data());
+                that.allUsers.push(doc.data())
+            });
+        });
     }
 }
 </script>
