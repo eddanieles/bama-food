@@ -1,6 +1,9 @@
 <template>
   <div>
         <h1>Friends</h1>
+        <div v-if="this.friends.length === 0">
+            <p class="fw-lighter fst-italic">You have 0 friends in your network.</p> 
+        </div>
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend />
         </div>
@@ -50,6 +53,21 @@ export default {
                 })
             }).catch((error) => {
                 console.log("Error getting document:", error);
+                usersCollection.get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            // console.log(doc.id, " => ", doc.data());
+                            let parsedUser = doc.data();
+                            parsedUser.id = doc.id;
+                            
+                            if (doc.id === that.$store.state.userProfile.id) {
+                                return
+                            } else {
+                                that.allUsers.push(parsedUser);
+                            }
+                        });
+                    }).catch((error) => {
+                        console.log("Error getting document:", error);
+                    });
             });
     }
 }
