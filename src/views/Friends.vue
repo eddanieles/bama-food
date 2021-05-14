@@ -1,11 +1,12 @@
 <template>
   <div>
       <h1>Friends</h1>
+      <div>{{this.friends}}</div>
   </div>
 </template>
 
 <script>
-import { networkCollection } from '../firebase'
+import { networkCollection, usersCollection } from '../firebase'
 
 export default {
     data() {
@@ -14,15 +15,23 @@ export default {
         }
     },
     beforeCreate() {
+        let that = this;
         networkCollection.doc(this.$store.state.userProfile.id)
             .get()
             .then((doc) => {
-                if (doc.exists) {
-                    console.log("Document data:", doc.data());
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                }
+                doc.data().friends.map(async friend => {
+                    await usersCollection.doc(friend).get().then((doc) => {
+                        if (doc.exists) {
+                            // console.log("Document data:", doc.data());
+                            that.friends.push(doc.data())
+                        } else {
+                            // doc.data() will be undefined in this case
+                            console.log("No such document!");
+                        }
+                    }).catch((error) => {
+                        console.log("Error getting document:", error);
+                    });
+                })
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
