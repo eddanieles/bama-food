@@ -92,23 +92,18 @@ export default {
         },
         onChange(index, terms) {
             event.preventDefault();
-            // console.log(index)
-            // console.log(terms)
             var categoryObject = _.find(json.categories, category => {
                 return category.title === terms;
             })
-            // console.log(categoryObject);
+            
             let cacheMoodArr = this.$store.state.userProfile.inMoodFor;
             cacheMoodArr[index] = categoryObject;
 
-            console.log(cacheMoodArr)
+            
 
             var userRef = usersCollection.doc(this.$store.state.userProfile.id);
             return userRef.update({
                 inMoodFor: cacheMoodArr
-            })
-            .then(() => {
-                console.log("Document successfully updated!");
             })
             .catch((error) => {
                 // The document probably doesn't exist.
