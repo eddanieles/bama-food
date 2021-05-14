@@ -15,7 +15,7 @@
       <!---USer Area -->
       <v-list-item two-line class="px-0" :v-show="this.$store.state.userProfile">
         <v-list-item-avatar>
-          <img v-bind:src="this.$store.state.userProfile.profileImage" />
+          <img v-bind:src="this.$store.state.userProfile.profileImage ? this.$store.state.userProfile.profileImage : require('../../assets/background/user1.jpg')" />
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -59,41 +59,20 @@ export default {
   data: () => ({
     items: [
       {
-        title: "Dashboard",
-        icon: "mdi-view-dashboard",
-        to: "/dashboard/basic-dashboard"
+        title: "Home",
+        icon: "mdi-home",
+        to: "/home"
       },
-
       {
         title: "Profile",
         icon: "mdi-account-circle",
-        to: "/pages/profile"
+        to: "/profile"
       },
-
-      {
-        title: "Alerts",
-        icon: "mdi-alert",
-        to: "/pages/alerts"
-      },
-
-      {
-        title: "Icons",
-        icon: "mdi-emoticon",
-        to: "/pages/icons"
-      },
-
-      {
-        title: "Basic Table",
-        icon: "mdi-table-column-width",
-        to: "/pages/tables-simple"
-      },
-
       {
         title: "User Dashboard",
         icon: "mdi-view-dashboard",
         to: "/dashboard"
       },
-
       {
         title: "Friends",
         icon: "mdi-account-group-outline",

@@ -14,59 +14,30 @@ export default new Router({
             children: [
                 // Components
                 {
-                    name: 'Alerts',
-                    path: 'pages/alerts',
-                    component: () => import('@/views/pages/Alerts'),
-                },
-
-                {
-                    name: 'Profile',
-                    path: 'pages/profile',
-                    component: () => import('@/views/pages/Profile'),
-                },
-
-                {
-                    name: 'Icons',
-                    path: 'pages/icons',
-                    component: () => import('@/views/pages/Icons'),
-                },
-
-                {
-                    name: 'TableSimple',
-                    path: 'pages/tables-simple',
-                    component: () => import('@/views/pages/TableSimple'),
-                },
-
-                {
-                    name: 'Dashboard',
-                    path: 'dashboard/basic-dashboard',
-                    component: () => import('@/views/dashboard/BasicDashboard'),
-                },
-
-                {
                     name: 'Home',
                     path: 'home',
                     component: () => import('@/views/Home'),
                 },
-
                 {
                     name: 'Login',
                     path: 'login',
                     component: () => import('@/views/Login'),
                 },
-
                 {
                     name: 'User Dashboard',
                     path: 'dashboard',
                     component: () => import('@/views/Dashboard'),
                 },
-
                 {
                     name: 'Friends',
                     path: 'friends',
                     component: () => import('@/views/Friends'),
+                },
+                {
+                    name: 'Profile',
+                    path: 'profile',
+                    component: () => import('@/views/Profile'),
                 }
-
             ]
         },
 

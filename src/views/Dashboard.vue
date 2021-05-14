@@ -111,10 +111,10 @@ export default {
             });
         }
     },
-    // beforeCreate() {
-    //     this.$store.dispatch('getFavorites', this.$store.state.userProfile.id);
-    //     this.$store.dispatch('getTryList', this.$store.state.userProfile.id);
-    // }
+    beforeCreate() {
+        this.$store.dispatch('getFavorites', this.$store.state.userProfile.id);
+        this.$store.dispatch('getTryList', this.$store.state.userProfile.id);
+    }
 }
 </script>
 
