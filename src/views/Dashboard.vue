@@ -49,14 +49,14 @@
             <b-col cols="6">
                 <h1>Favorites</h1>
                 <div v-for="business in this.$store.state.userFavorites" :key="business.id">
-                    <business-card v-bind:business = business />
+                    <business-card :business=business />
                 </div>
             </b-col>
 
             <b-col cols="6">
                 <h1>Trylist</h1>
                 <div v-for="business in this.$store.state.userTrylist" :key="business.id">
-                    <business-card v-bind:business = business />
+                    <business-card :business=business />
                 </div>
             </b-col>
         </b-row>
@@ -110,7 +110,11 @@ export default {
                 console.error("Error updating document: ", error);
             });
         }
-    }
+    },
+    // beforeCreate() {
+    //     this.$store.dispatch('getFavorites', this.$store.state.userProfile.id);
+    //     this.$store.dispatch('getTryList', this.$store.state.userProfile.id);
+    // }
 }
 </script>
 
