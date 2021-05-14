@@ -14,8 +14,8 @@
           </div>
             <button @click="login()" class="button">Log In</button>
             <div class="extras">
-                <a>Forgot Password</a>
-                <a @click="toggleForm()">Create an Account</a>
+                <p><a class="fs-6">Forgot Password</a></p>
+                <p><a @click="toggleForm()" class="fs-6">Create an Account</a></p>
             </div>
         </form>
         <form v-else @submit.prevent>
