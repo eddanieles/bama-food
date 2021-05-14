@@ -24,14 +24,20 @@ export default {
             .get()
             .then((doc) => {
                 doc.data().friends.map(async friend => {
-                    await usersCollection.doc(friend).get().then((doc) => {
-                        if (doc.exists) {
-                            // console.log("Document data:", doc.data());
-                            that.friends.push(doc.data())
-                        } else {
-                            // doc.data() will be undefined in this case
-                            console.log("No such document!");
-                        }
+                    await usersCollection.get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            // console.log(doc.id, " => ", doc.data());
+                            let parsedUser = doc.data();
+                            parsedUser.id = doc.id;
+                            
+                            if (doc.id === friend) {
+                                that.friends.push(parsedUser);
+                            } else if (doc.id === that.$store.state.userProfile.id) {
+                                return
+                            } else {
+                                that.allUsers.push(parsedUser);
+                            }
+                        });
                     }).catch((error) => {
                         console.log("Error getting document:", error);
                     });
@@ -39,13 +45,6 @@ export default {
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
-
-        usersCollection.get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                // console.log(doc.id, " => ", doc.data());
-                that.allUsers.push(doc.data())
-            });
-        });
     }
 }
 </script>
