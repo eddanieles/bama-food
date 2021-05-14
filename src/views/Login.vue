@@ -14,19 +14,19 @@
           </div>
             <button @click="login()" class="button">Log In</button>
             <div class="extras">
-                <a>Forgot Password</a>
-                <a @click="toggleForm()">Create an Account</a>
+                <p><a class="fs-6">Forgot Password</a></p>
+                <p><a @click="toggleForm()" class="fs-6">Create an Account</a></p>
             </div>
         </form>
         <form v-else @submit.prevent>
             <h1>Get Started</h1>
             <div>
-                <label for="name">Name</label>
-                <input v-model.trim="signupForm.name" type="text" placeholder="Savvy Apps" id="name" />
+                <label for="firstName">First Name</label>
+                <input v-model.trim="signupForm.firstName" type="text" placeholder="first name..." id="firstName" />
             </div>
             <div>
-                <label for="title">Title</label>
-                <input v-model.trim="signupForm.title" type="text" placeholder="Company" id="title" />
+                <label for="lastName">Last Name</label>
+                <input v-model.trim="signupForm.lastName" type="text" placeholder="last name..." id="lastName" />
             </div>
             <div>
                 <label for="email2">Email</label>
@@ -56,8 +56,8 @@ export default {
                 password: ''
             },
             signupForm: {
-                name: '',
-                title: '',
+                firstName: '',
+                lastName: '',
                 email: '',
                 password: ''
             },
@@ -75,8 +75,8 @@ export default {
             this.$store.dispatch('signup', {
                 email: this.signupForm.email,
                 password: this.signupForm.password,
-                name: this.signupForm.name,
-                title: this.signupForm.title
+                firstName: this.signupForm.firstName,
+                lastName: this.signupForm.lastName
             })
         },
         toggleForm() {
