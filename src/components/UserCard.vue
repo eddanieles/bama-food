@@ -7,11 +7,13 @@
           <p class="userCardName">{{user.firstName}} {{user.lastName}}</p>
         </b-col>
         <b-col md="6">
-          <b-card-text class="userCardCuisine">
-            <p><big>Wants: {{user.inMoodFor[0].title}}</big></p>
-            <p>Kinda wants: {{user.inMoodFor[1].title}}</p>
-            <p><small>Can eat: {{user.inMoodFor[2].title}}</small></p>
-          </b-card-text>
+          <div class="parentUserCardCuisine">
+            <b-card-text class="userCardCuisine">
+              <p><big>Wants: {{user.inMoodFor[0].title}}</big></p>
+              <p>Kinda wants: {{user.inMoodFor[1].title}}</p>
+              <p><small>Can eat: {{user.inMoodFor[2].title}}</small></p>
+            </b-card-text>
+          </div>
         </b-col>
       </b-row>
     </b-card>
@@ -26,14 +28,22 @@ export default {
 </script>
 
 <style>
+.parentUserCardCuisine {
+    width: 100%;
+    height: 100%;
+    display: table;
+}
+
 .userCardCuisine {
-  text-align: center;
-  margin-top: 5rem;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .userCardName {
   text-align: center;
   font-size: x-large;
   font-weight: bold;
+  text-decoration: underline;
 }
 </style>
