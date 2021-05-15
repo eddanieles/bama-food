@@ -72,7 +72,7 @@ export default {
             // console.log('myFilteredFavoritesArr', myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId));
 
             var friendsFilteredFavortiesArr = [];
-            favoritesCollection.where("userId", "==", friend.id).where("categories", "array-contains", categoryObject)
+            return favoritesCollection.where("userId", "==", friend.id).where("categories", "array-contains", categoryObject)
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
@@ -84,12 +84,11 @@ export default {
                     // console.log("friendsFilteredFavortiesArr", friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
                     let matchedRestaurants = _.intersection(myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
                     console.log("matchedRestaurants", matchedRestaurants);
+                    return matchedRestaurants;
                 })
                 .catch((error) => {
                     console.log("Error getting documents: ", error);
-                });
-
-            return cuisine;
+                })
         }
     },
     beforeCreate() {
