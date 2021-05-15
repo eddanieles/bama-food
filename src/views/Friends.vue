@@ -6,6 +6,7 @@
         </div>
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend />
+            <p>{{_self.getRestaurant(friend)}}</p>
         </div>
 
         <h1>All Users</h1>
@@ -18,13 +19,31 @@
 <script>
 import UserCard from '../components/UserCard.vue';
 import { networkCollection, usersCollection } from '../firebase'
+import _ from 'underscore'
 
 export default {
     components: { UserCard },
     data() {
         return {
             friends: [],
-            allUsers: []
+            allUsers: [],
+            suggestedRestaurant: {}
+        }
+    },
+    methods: {
+        getRestaurant(friend) {
+            let that = this;
+            let obj = {
+                me: that.$store.state.userProfile ? that.$store.state.userProfile.inMoodFor.map(cuisine => cuisine.alias) : [],
+                friend: friend ? friend.inMoodFor.map(cuisine => cuisine.alias) : []
+            }
+            
+            let matchedCuisine = _.intersection(obj.me, obj.friend);
+            if (matchedCuisine[0]) {
+                return matchedCuisine
+            } else {
+                return "no matches in matchedCuisine"
+            }
         }
     },
     beforeCreate() {
@@ -69,6 +88,9 @@ export default {
                         console.log("Error getting document:", error);
                     });
             });
+    },
+    beforeMount() {
+        this.getRestaurant();
     }
 }
 </script>
