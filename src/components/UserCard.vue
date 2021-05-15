@@ -1,18 +1,20 @@
 <template>
   <div>
-      <b-card
-        :img-src="user.profileImage ? user.profileImage : require('../assets/background/user1.jpg')" 
-        img-height="100px" 
-        img-width="100px" 
-        img-alt="Image not found." 
-        img-left class="mb-3" 
-        v-bind:title="`${user.firstName} ${user.lastName}`">
-        <b-card-text>
-            <p>Wants: {{user.inMoodFor[0].title}}</p>
+    <b-card no-body class="overflow-hidden" style="max-width: 540px;">
+      <b-row no-gutters>
+        <b-col md="6">
+          <b-card-img :src="user.profileImage ? user.profileImage : require('../assets/background/user1.jpg')" alt="Image" class="rounded-0"></b-card-img>
+          <p class="userCardName">{{user.firstName}} {{user.lastName}}</p>
+        </b-col>
+        <b-col md="6">
+          <b-card-text class="userCardCuisine">
+            <p><big>Wants: {{user.inMoodFor[0].title}}</big></p>
             <p>Kinda wants: {{user.inMoodFor[1].title}}</p>
-            <p>Can eat: {{user.inMoodFor[2].title}}</p>
-        </b-card-text>
-      </b-card>
+            <p><small>Can eat: {{user.inMoodFor[2].title}}</small></p>
+          </b-card-text>
+        </b-col>
+      </b-row>
+    </b-card>
   </div>
 </template>
 
@@ -24,5 +26,14 @@ export default {
 </script>
 
 <style>
+.userCardCuisine {
+  text-align: center;
+  margin-top: 5rem;
+}
 
+.userCardName {
+  text-align: center;
+  font-size: x-large;
+  font-weight: bold;
+}
 </style>
