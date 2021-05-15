@@ -7,7 +7,7 @@
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend />
             <p>matchedCuisine: {{_self.findMatchedCuisine(friend)}}</p>
-            <p>matchedFavorites: {{_self.findMatchedFavorites(friend, _self.matchedCuisine)}}</p>
+            <p>matchedFavorites: {{_self.findMatchedFavorites(friend, _self.matchedCuisine).then(data => {return data})}}</p>
         </div>
 
         <h1>All Users</h1>
