@@ -7,8 +7,8 @@
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend />
             <p>matchedCuisine: {{_self.findMatchedCuisine(friend)}}</p>
-            <p>matchedFavorites: {{_self.matchedFavorite}}</p>
             <button class="btn btn-success" @click="_self.findMatchedFavorites(friend)">Pick from Favorites</button>
+            <p>matchedFavorites: {{_self.matchedFavorite}}</p>
         </div>
 
         <h1>All Users</h1>
@@ -30,7 +30,7 @@ export default {
         return {
             friends: [],
             allUsers: [],
-            matchedCuisine: '',
+            matchedCuisine: {},
             matchedFavorite: {}
         }
     },
@@ -54,57 +54,132 @@ export default {
                     })
                 });
                 let mostInMoodFor = _.min(arr, index => {return index.index});
-                this.matchedCuisine = mostInMoodFor.cuisine;
-                return mostInMoodFor.cuisine;
+
+                var categoryObject = _.find(json.categories, category => {
+                    return category.alias === mostInMoodFor.cuisine;
+                })
+
+                this.matchedCuisine = categoryObject;
+                return categoryObject.title;
             } else {
-                return "no matches in matchedCuisine"
+                return "No similiar moods."
             }
         },
         async findMatchedFavorites(friend) {
-            var cuisine = this.matchedCuisine;
-            var categoryObject = _.find(json.categories, category => {
-                return category.alias === cuisine;
-            })
+            if (this.matchedCuisine.title) {
+                var cuisine = this.matchedCuisine.alias;
+                var categoryObject = _.find(json.categories, category => {
+                    return category.alias === cuisine;
+                })
 
-            var myFilteredFavoritesArr = this.$store.state.userFavorites.filter(favorite => {
-                if (_.contains(favorite.categories.map(category => category.alias), cuisine)) {
-                    return favorite;
-                }
-            });
-            // console.log('myFilteredFavoritesArr', myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId));
-
-            var friendsFilteredFavortiesArr = [];
-            return await favoritesCollection.where("userId", "==", friend.id).where("categories", "array-contains", categoryObject)
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        // doc.data() is never undefined for query doc snapshots
-                        friendsFilteredFavortiesArr.push(doc.data())
-                    });
-                    // console.log("friendsFilteredFavortiesArr", friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
-                    let matchedRestaurants = _.intersection(myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
-
-                    if (matchedRestaurants.length > 1) {
-                        let id = matchedRestaurants[_.random(0, matchedRestaurants.length - 1)];
-                        let justPickOne = _.filter(myFilteredFavoritesArr, favorite => {
-                            return favorite.yelpBusinessId === id
-                        })
-                        console.log("multiple matchedRestaurants", justPickOne);
-                        this.matchedFavorite = justPickOne;
-                    } else if (matchedRestaurants.length === 1) {
-                        let justOne = _.filter(myFilteredFavoritesArr, favorite => {
-                            return favorite.yelpBusinessId === matchedRestaurants[0]
-                        })
-                        console.log("one matchedRestaurants", justOne);
-                        this.matchedFavorite = justOne;
-                    } else {
-                        console.log("zero matchedRestaurants");
-                        this.matchedFavorite = { name: "no matching favorites"}
+                var myFilteredFavoritesArr = this.$store.state.userFavorites.filter(favorite => {
+                    if (_.contains(favorite.categories.map(category => category.alias), cuisine)) {
+                        return favorite;
                     }
-                })
-                .catch((error) => {
-                    console.log("Error getting documents: ", error);
-                })
+                });
+                // console.log('myFilteredFavoritesArr', myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId));
+
+                var friendsFilteredFavortiesArr = [];
+                return await favoritesCollection.where("userId", "==", friend.id).where("categories", "array-contains", categoryObject)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            // doc.data() is never undefined for query doc snapshots
+                            friendsFilteredFavortiesArr.push(doc.data())
+                        });
+                        // console.log("friendsFilteredFavortiesArr", friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
+                        let matchedRestaurants = _.intersection(myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
+
+                        if (matchedRestaurants.length > 1) {
+                            let id = matchedRestaurants[_.random(0, matchedRestaurants.length - 1)];
+                            let justPickOne = _.filter(myFilteredFavoritesArr, favorite => {
+                                return favorite.yelpBusinessId === id
+                            })
+                            // console.log("multiple matchedRestaurants", justPickOne);
+                            this.matchedFavorite = justPickOne;
+                        } else if (matchedRestaurants.length === 1) {
+                            let justOne = _.filter(myFilteredFavoritesArr, favorite => {
+                                return favorite.yelpBusinessId === matchedRestaurants[0]
+                            })
+                            // console.log("one matchedRestaurants", justOne);
+                            this.matchedFavorite = justOne;
+                        } else {
+                            // console.log("zero matchedRestaurants");
+
+
+                            var myFavoritesArr = this.$store.state.userFavorites;
+                            var friendsFavortiesArr = [];
+
+                            favoritesCollection.where("userId", "==", friend.id)
+                                .get()
+                                .then((querySnapshot) => {
+                                    querySnapshot.forEach((doc) => {
+                                        // doc.data() is never undefined for query doc snapshots
+                                        friendsFavortiesArr.push(doc.data())
+                                    });
+
+                                    let matchedRestaurants = _.intersection(myFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFavortiesArr.map(favorite => favorite.yelpBusinessId));
+                                    if (matchedRestaurants.length > 1) {
+                                        let id = matchedRestaurants[_.random(0, matchedRestaurants.length - 1)];
+                                        let justPickOne = _.filter(myFavoritesArr, favorite => {
+                                            return favorite.yelpBusinessId === id
+                                        })
+                                        // console.log("no matchedCuisine multiple matchedRestaurants", justPickOne);
+                                        this.matchedFavorite = justPickOne;
+                                    } else if (matchedRestaurants.length === 1) {
+                                        let justOne = _.filter(myFavoritesArr, favorite => {
+                                            return favorite.yelpBusinessId === matchedRestaurants[0]
+                                        })
+                                        // console.log("no matchedCuisine one matchedRestaurants", justOne);
+                                        this.matchedFavorite = justOne;
+                                    } else {
+                                        // console.log("no matchedCuisine zero matchedRestaurants");
+                                        this.matchedFavorite = { name: "no matching favorites"}
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.log("Error getting documents: ", error);
+                                })
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("Error getting documents: ", error);
+                    })
+            } else {
+                var myFavoritesArr = this.$store.state.userFavorites;
+                var friendsFavortiesArr = [];
+
+                return await favoritesCollection.where("userId", "==", friend.id)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            // doc.data() is never undefined for query doc snapshots
+                            friendsFavortiesArr.push(doc.data())
+                        });
+
+                        let matchedRestaurants = _.intersection(myFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFavortiesArr.map(favorite => favorite.yelpBusinessId));
+                        if (matchedRestaurants.length > 1) {
+                            let id = matchedRestaurants[_.random(0, matchedRestaurants.length - 1)];
+                            let justPickOne = _.filter(myFavoritesArr, favorite => {
+                                return favorite.yelpBusinessId === id
+                            })
+                            // console.log("no matchedCuisine multiple matchedRestaurants", justPickOne);
+                            this.matchedFavorite = justPickOne;
+                        } else if (matchedRestaurants.length === 1) {
+                            let justOne = _.filter(myFavoritesArr, favorite => {
+                                return favorite.yelpBusinessId === matchedRestaurants[0]
+                            })
+                            // console.log("no matchedCuisine one matchedRestaurants", justOne);
+                            this.matchedFavorite = justOne;
+                        } else {
+                            // console.log("no matchedCuisine zero matchedRestaurants");
+                            this.matchedFavorite = { name: "no matching favorites"}
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("Error getting documents: ", error);
+                    })
+            }
         }
     },
     beforeCreate() {
