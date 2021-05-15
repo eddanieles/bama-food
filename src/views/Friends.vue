@@ -59,7 +59,7 @@ export default {
                 return "no matches in matchedCuisine"
             }
         },
-        findMatchedFavorites(friend, cuisine) {
+        async findMatchedFavorites(friend, cuisine) {
             var categoryObject = _.find(json.categories, category => {
                 return category.alias === cuisine;
             })
@@ -72,7 +72,7 @@ export default {
             // console.log('myFilteredFavoritesArr', myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId));
 
             var friendsFilteredFavortiesArr = [];
-            return favoritesCollection.where("userId", "==", friend.id).where("categories", "array-contains", categoryObject)
+            return await favoritesCollection.where("userId", "==", friend.id).where("categories", "array-contains", categoryObject)
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
@@ -80,11 +80,11 @@ export default {
                         friendsFilteredFavortiesArr.push(doc.data())
                     });
                 })
-                .then(() => {
+                .then(async () => {
                     // console.log("friendsFilteredFavortiesArr", friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
                     let matchedRestaurants = _.intersection(myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
                     console.log("matchedRestaurants", matchedRestaurants);
-                    return matchedRestaurants;
+                    return await matchedRestaurants;
                 })
                 .catch((error) => {
                     console.log("Error getting documents: ", error);
