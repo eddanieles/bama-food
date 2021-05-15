@@ -81,7 +81,20 @@ export default {
                     });
                     // console.log("friendsFilteredFavortiesArr", friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
                     let matchedRestaurants = _.intersection(myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
-                    console.log("matchedRestaurants", matchedRestaurants);
+
+                    if (matchedRestaurants.length > 1) {
+                        let id = matchedRestaurants[_.random(0, matchedRestaurants.length - 1)];
+                        let justPickOne = _.filter(myFilteredFavoritesArr, favorite => {
+                            return favorite.yelpBusinessId === id
+                        })
+                        console.log("matchedRestaurants", justPickOne);
+                    } else if (matchedRestaurants.length === 1) {
+                        let justOne = _.filter(myFilteredFavoritesArr, favorite => {
+                            return favorite.yelpBusinessId === matchedRestaurants[0]
+                        })
+                        console.log("matchedRestaurants", justOne);
+                    }
+
                     return matchedRestaurants;
                 })
                 .catch((error) => {
