@@ -30,7 +30,7 @@ export default {
             friends: [],
             allUsers: [],
             matchedCuisine: '',
-            matchedFavorites: []
+            matchedFavorite: {}
         }
     },
     methods: {
@@ -83,8 +83,20 @@ export default {
                 .then(async () => {
                     // console.log("friendsFilteredFavortiesArr", friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
                     let matchedRestaurants = _.intersection(myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
-                    console.log("matchedRestaurants", matchedRestaurants);
-                    return await matchedRestaurants;
+
+                    if (matchedRestaurants.length > 0) {
+                        let id = matchedRestaurants[_.random(0, matchedRestaurants.length)];
+                        
+                        let pickAFavorite = _.find(myFilteredFavoritesArr, (favorite) => {
+                            return favorite.yelpBusinessId === id;
+                        })
+
+                        console.log("matchedRestaurants if", pickAFavorite);
+                        return await pickAFavorite
+                    } else if (matchedRestaurants.length === 1) {
+                        console.log("matchedRestaurants else if", matchedRestaurants[0]);
+                    }
+                    
                 })
                 .catch((error) => {
                     console.log("Error getting documents: ", error);
