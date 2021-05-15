@@ -7,7 +7,8 @@
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend />
             <p>matchedCuisine: {{_self.findMatchedCuisine(friend)}}</p>
-            <p>matchedFavorites: {{_self.findMatchedFavorites(friend, _self.matchedCuisine).then(data => {return data})}}</p>
+            <p>matchedFavorites: {{_self.matchedFavorite}}</p>
+            <button class="btn btn-success" @click="_self.findMatchedFavorites(friend)">Pick from Favorites</button>
         </div>
 
         <h1>All Users</h1>
@@ -59,7 +60,8 @@ export default {
                 return "no matches in matchedCuisine"
             }
         },
-        async findMatchedFavorites(friend, cuisine) {
+        async findMatchedFavorites(friend) {
+            var cuisine = this.matchedCuisine;
             var categoryObject = _.find(json.categories, category => {
                 return category.alias === cuisine;
             })
@@ -87,15 +89,18 @@ export default {
                         let justPickOne = _.filter(myFilteredFavoritesArr, favorite => {
                             return favorite.yelpBusinessId === id
                         })
-                        console.log("matchedRestaurants", justPickOne);
+                        console.log("multiple matchedRestaurants", justPickOne);
+                        this.matchedFavorite = justPickOne;
                     } else if (matchedRestaurants.length === 1) {
                         let justOne = _.filter(myFilteredFavoritesArr, favorite => {
                             return favorite.yelpBusinessId === matchedRestaurants[0]
                         })
-                        console.log("matchedRestaurants", justOne);
+                        console.log("one matchedRestaurants", justOne);
+                        this.matchedFavorite = justOne;
+                    } else {
+                        console.log("zero matchedRestaurants");
+                        this.matchedFavorite = { name: "no matching favorites"}
                     }
-
-                    return matchedRestaurants;
                 })
                 .catch((error) => {
                     console.log("Error getting documents: ", error);
