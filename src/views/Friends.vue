@@ -6,7 +6,8 @@
         </div>
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend />
-            <p>Advised cuisine: {{_self.getRestaurant(friend)}}</p>
+            <p>matchedCuisine: {{_self.findMatchedCuisine(friend)}}</p>
+            <p>matchedFavorites: {{_self.findMatchedFavorites(friend, _self.matchedCuisine)}}</p>
         </div>
 
         <h1>All Users</h1>
@@ -18,19 +19,22 @@
 
 <script>
 import UserCard from '../components/UserCard.vue';
-import { networkCollection, usersCollection } from '../firebase'
+import { networkCollection, usersCollection, favoritesCollection } from '../firebase'
 import _ from 'underscore'
+import json from '../components/categories.json'
 
 export default {
     components: { UserCard },
     data() {
         return {
             friends: [],
-            allUsers: []
+            allUsers: [],
+            matchedCuisine: '',
+            matchedFavorites: []
         }
     },
     methods: {
-        getRestaurant(friend) {
+        findMatchedCuisine(friend) {
             let that = this;
             let obj = {
                 me: that.$store.state.userProfile ? that.$store.state.userProfile.inMoodFor.map(cuisine => cuisine.alias) : [],
@@ -49,10 +53,43 @@ export default {
                     })
                 });
                 let mostInMoodFor = _.min(arr, index => {return index.index});
+                this.matchedCuisine = mostInMoodFor.cuisine;
                 return mostInMoodFor.cuisine;
             } else {
                 return "no matches in matchedCuisine"
             }
+        },
+        findMatchedFavorites(friend, cuisine) {
+            var categoryObject = _.find(json.categories, category => {
+                return category.alias === cuisine;
+            })
+
+            var myFilteredFavoritesArr = this.$store.state.userFavorites.filter(favorite => {
+                if (_.contains(favorite.categories.map(category => category.alias), cuisine)) {
+                    return favorite;
+                }
+            });
+            // console.log('myFilteredFavoritesArr', myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId));
+
+            var friendsFilteredFavortiesArr = [];
+            favoritesCollection.where("userId", "==", friend.id).where("categories", "array-contains", categoryObject)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        // doc.data() is never undefined for query doc snapshots
+                        friendsFilteredFavortiesArr.push(doc.data())
+                    });
+                })
+                .then(() => {
+                    // console.log("friendsFilteredFavortiesArr", friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
+                    let matchedRestaurants = _.intersection(myFilteredFavoritesArr.map(favorite => favorite.yelpBusinessId), friendsFilteredFavortiesArr.map(favorite => favorite.yelpBusinessId));
+                    console.log("matchedRestaurants", matchedRestaurants);
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
+
+            return cuisine;
         }
     },
     beforeCreate() {
@@ -97,9 +134,6 @@ export default {
                         console.log("Error getting document:", error);
                     });
             });
-    },
-    beforeMount() {
-        this.getRestaurant();
     }
 }
 </script>
