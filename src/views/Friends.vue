@@ -6,7 +6,7 @@
         </div>
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend />
-            <p>{{_self.getRestaurant(friend)}}</p>
+            <p>Advised cuisine: {{_self.getRestaurant(friend)}}</p>
         </div>
 
         <h1>All Users</h1>
@@ -26,8 +26,7 @@ export default {
     data() {
         return {
             friends: [],
-            allUsers: [],
-            suggestedRestaurant: {}
+            allUsers: []
         }
     },
     methods: {
@@ -39,8 +38,18 @@ export default {
             }
             
             let matchedCuisine = _.intersection(obj.me, obj.friend);
+            
             if (matchedCuisine[0]) {
-                return matchedCuisine
+                let arr = [];
+                matchedCuisine.map(cuisine => {
+                    let index =  _.indexOf(obj.friend, cuisine)
+                    arr.push({
+                        index,
+                        cuisine
+                    })
+                });
+                let mostInMoodFor = _.min(arr, index => {return index.index});
+                return mostInMoodFor.cuisine;
             } else {
                 return "no matches in matchedCuisine"
             }
