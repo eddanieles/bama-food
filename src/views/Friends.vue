@@ -32,7 +32,7 @@ export default {
     methods: {
         
     },
-    beforeCreate() {
+    created() {
         let that = this;
         networkCollection.doc(this.$store.state.userProfile.id)
             .get()
