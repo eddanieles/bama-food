@@ -3,11 +3,13 @@
         <user-card :user="this.friend" />
         <p>Matched Cuisine(s) from most in the mood for, to least: </p>
         <div v-for="cuisine in this.matchedCuisines" :key="cuisine.index">
-            <v-icon>mdi-format-list-bulleted-square</v-icon>
+            <v-icon v-b-toggle="`collapse-${cuisine.index}`">mdi-format-list-bulleted-square</v-icon>
             <big><span class="text-uppercase">{{cuisine.cuisineObj.title}}: </span></big>
-            <button class="btn btn-success">Get from Favorites</button>
-            <button class="btn btn-primary">Get from Trylist</button>
-            <button class="btn btn-secondary">Get from Nearby</button>
+            <b-collapse :id="`collapse-${cuisine.index}`" class="mt-2">
+                <button class="btn btn-success">Get from Favorites</button>
+                <button class="btn btn-primary">Get from Trylist</button>
+                <button class="btn btn-secondary">Get from Nearby</button>
+            </b-collapse>
         </div>
   </div>
 </template>
