@@ -1,7 +1,14 @@
 <template>
   <div>
         <user-card :user="this.friend" />
-        <p>Matched Cuisine(s): {{this.matchedCuisines}}</p>
+        <p>Matched Cuisine(s) from most in the mood for, to least: </p>
+        <div v-for="cuisine in this.matchedCuisines" :key="cuisine.index">
+            <v-icon>mdi-format-list-bulleted-square</v-icon>
+            <big><span class="text-uppercase">{{cuisine.cuisineObj.title}}: </span></big>
+            <button class="btn btn-success">Get from Favorites</button>
+            <button class="btn btn-primary">Get from Trylist</button>
+            <button class="btn btn-secondary">Get from Nearby</button>
+        </div>
   </div>
 </template>
 
@@ -18,11 +25,12 @@ export default {
         return {
             friend: {},
             matchedCuisines: [],
-            matchedFavorite: {}
+            matchedFavorite: {},
+            show: false
         }
     },
     methods: {
-        
+
     },
     beforeCreate() {
         let that = this;
