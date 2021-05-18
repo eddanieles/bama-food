@@ -29,12 +29,18 @@
                  </p>
                 <a v-bind:href="`${business.url}`" target="_blank" class="yelpLink">Go to Yelp business page...</a>
             </b-card-text>
-            <div v-if="this.checkFavorite(business.id)">
-                <button type="button" class="btn btn-primary" @click="addToFavorites(business)">Add to Favorites</button>
+            <div v-if="this.checkFavorite(business.id || business.yelpBusinessId)">
+                <button type="button" class="btn btn-primary" @click="addToFavorites(business)"><small>Add to Favorites</small></button>
             </div>
-            
-            <div v-if="this.checkTrylist(business.id)">
-                <button type="button" class="btn btn-info" @click="addToTrylist(business)">Add to Trylist</button>
+            <div v-else-if="this.$route.path === '/dashboard'">
+                <button type="button" class="btn btn-warning" @click="deleteFromFavorites(business)"><small>Delete from Favorites</small></button>
+            </div>
+
+            <div v-if="this.checkTrylist(business.id || business.yelpBusinessId)">
+                <button type="button" class="btn btn-info" @click="addToTrylist(business)"><small>Add to Trylist</small></button>
+            </div>
+            <div v-else-if="this.$route.path === '/dashboard'">
+                <button type="button" class="btn btn-warning" @click="deleteFromTrylist(business)"><small>Delete from Trylist</small></button>
             </div>
         </b-card>
   </div>
@@ -75,9 +81,9 @@ export default {
                     latitude: businessObj.coordinates.latitude,
                     longitude: businessObj.coordinates.longitude
                 },
-                displayPhone: businessObj.display_phone,
-                yelpBusinessId: businessObj.id,
-                imageUrl: businessObj.image_url,
+                displayPhone: businessObj.display_phone || businessObj.displayPhone,
+                yelpBusinessId: businessObj.id || businessObj.yelpBusinessId,
+                imageUrl: businessObj.image_url || businessObj.imageUrl,
                 location: businessObj.location,
                 name: businessObj.name,
                 phone: businessObj.phone,
@@ -85,7 +91,7 @@ export default {
                 rating: businessObj.rating,
                 review_count: businessObj.review_count,
                 transactions: businessObj.transactions.map(transaction => transaction),
-                yelpUrl: businessObj.url
+                yelpUrl: businessObj.url || businessObj.yelpUrl
             }
             return obj;
         },
@@ -99,6 +105,28 @@ export default {
         addToTrylist(businessObj) {
             let res = this.cleanData(businessObj);
             trylistCollection.add(res);
+        },
+        deleteFromFavorites(businessObj) {
+            favoritesCollection.where('userId', '==', auth.currentUser.uid)
+                .get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(doc => {
+                       if (doc.data().yelpBusinessId === businessObj.yelpBusinessId) {
+                           doc.ref.delete()
+                       }
+                    })
+                })
+        },
+        deleteFromTrylist(businessObj) {
+            trylistCollection.where('userId', '==', auth.currentUser.uid)
+                .get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(doc => {
+                       if (doc.data().yelpBusinessId === businessObj.yelpBusinessId) {
+                           doc.ref.delete()
+                       }
+                    })
+                })
         }
     }
 }

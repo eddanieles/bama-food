@@ -9,9 +9,9 @@
         <b-col md="6">
           <div class="parentUserCardCuisine">
             <b-card-text class="userCardCuisine">
-              <p><big>Wants: {{user.inMoodFor[0].title}}</big></p>
-              <p>Kinda wants: {{user.inMoodFor[1].title}}</p>
-              <p><small>Can eat: {{user.inMoodFor[2].title}}</small></p>
+              <p><big>Wants: {{user.inMoodFor ? user.inMoodFor[0].title : ""}}</big></p>
+              <p>Kinda wants: {{user.inMoodFor ? user.inMoodFor[1].title : ""}}</p>
+              <p><small>Can eat: {{user.inMoodFor ? user.inMoodFor[2].title : ""}}</small></p>
             </b-card-text>
           </div>
         </b-col>

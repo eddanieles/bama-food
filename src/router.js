@@ -34,6 +34,11 @@ export default new Router({
                     component: () => import('@/views/Friends'),
                 },
                 {
+                    name: 'Matched',
+                    path: 'friends/:id',
+                    component: () => import('@/views/Matched'),
+                },
+                {
                     name: 'Profile',
                     path: 'profile',
                     component: () => import('@/views/Profile'),
