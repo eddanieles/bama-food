@@ -1,7 +1,10 @@
 <template>
   <div>
         <h1>Friends</h1>
-        <div v-if="this.friends.length === 0">
+        <div v-if="!this.friends[0]">
+            <p class="fw-lighter fst-italic">Loading...</p> 
+        </div>
+        <div v-else-if="this.friends.length === 0">
             <p class="fw-lighter fst-italic">You have 0 friends in your network.</p> 
         </div>
         <div v-for="friend in this.friends" :key="friend.id">
@@ -32,7 +35,7 @@ export default {
     methods: {
         
     },
-    created() {
+    beforeCreate() {
         let that = this;
         networkCollection.doc(this.$store.state.userProfile.id)
             .get()

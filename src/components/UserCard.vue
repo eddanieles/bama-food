@@ -1,6 +1,10 @@
 <template>
   <div>
-    <b-card no-body class="overflow-hidden" style="max-width: 540px;">
+    <b-card v-if="!user.lastName">
+      Loading...
+    </b-card>
+
+    <b-card v-else no-body class="overflow-hidden" style="max-width: 540px;">
       <b-row no-gutters>
         <b-col md="6">
           <b-card-img :src="user.profileImage ? user.profileImage : require('../assets/background/user1.jpg')" alt="Image" class="rounded-0"></b-card-img>

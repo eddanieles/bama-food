@@ -18,14 +18,17 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 router.beforeEach((to, from, next) => {
-    const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
-
-    if (requiresAuth && !auth.currentUser) {
-        next('/login')
-    } else {
-        next()
-    }
-})
+    auth.onAuthStateChanged(function(user) {
+        const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+        if (!requiresAuth) {
+            next()
+        } else if (requiresAuth && user) {
+            next()
+        } else {
+            next("/login");
+        }
+    });
+});
 
 new Vue({
     vuetify,
