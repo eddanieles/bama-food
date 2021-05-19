@@ -120,6 +120,7 @@ export default {
         },
         getNearby(cuisine) {
             let that = this;
+            
             let searchTerms = {
                 latitude: this.$store.state.latitude,
                 longitude: this.$store.state.longitude,
@@ -129,6 +130,7 @@ export default {
 
             this.$store.dispatch('businessSearch', searchTerms)
                 .then(() => {
+
                     var categoryObject = _.find(json.categories, category => {
                         return category.alias === cuisine;
                     })
@@ -141,8 +143,6 @@ export default {
                         that.selectedFavorite = that.$store.state.searchResults.businesses[index];
                     }
                 })
-
-
         }
     },
     beforeCreate() {

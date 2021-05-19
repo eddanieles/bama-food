@@ -58,8 +58,8 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        businessSearch({ commit }, params) {
-            axios.get(`${corsBridge}${yelpUrl}businesses/search`, {
+        async businessSearch({ commit }, params) {
+            await axios.get(`${corsBridge}${yelpUrl}businesses/search`, {
                 headers,
                 params 
                 })
