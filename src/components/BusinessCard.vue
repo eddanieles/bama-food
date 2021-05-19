@@ -29,19 +29,24 @@
                  </p>
                 <a v-bind:href="`${business.url}`" target="_blank" class="yelpLink">Go to Yelp business page...</a>
             </b-card-text>
-            <div v-if="this.checkFavorite(business.id || business.yelpBusinessId)">
-                <button type="button" class="btn btn-primary" @click="addToFavorites(business)"><small>Add to Favorites</small></button>
-            </div>
-            <div v-else-if="this.$route.path === '/dashboard'">
-                <button type="button" class="btn btn-warning" @click="deleteFromFavorites(business)"><small>Delete from Favorites</small></button>
+
+            <div v-if="this.$store.state.userProfile.firstName">
+                <div v-if="this.checkFavorite(business.id || business.yelpBusinessId)">
+                    <button type="button" class="btn btn-primary" @click="addToFavorites(business)"><small>Add to Favorites</small></button>
+                </div>
+                <div v-else-if="this.$route.path === '/dashboard'">
+                    <button type="button" class="btn btn-warning" @click="deleteFromFavorites(business)"><small>Delete from Favorites</small></button>
+                </div>
+
+            
+                <div v-if="this.checkTrylist(business.id || business.yelpBusinessId)">
+                    <button type="button" class="btn btn-info" @click="addToTrylist(business)"><small>Add to Trylist</small></button>
+                </div>
+                <div v-else-if="this.$route.path === '/dashboard'">
+                    <button type="button" class="btn btn-warning" @click="deleteFromTrylist(business)"><small>Delete from Trylist</small></button>
+                </div>
             </div>
 
-            <div v-if="this.checkTrylist(business.id || business.yelpBusinessId)">
-                <button type="button" class="btn btn-info" @click="addToTrylist(business)"><small>Add to Trylist</small></button>
-            </div>
-            <div v-else-if="this.$route.path === '/dashboard'">
-                <button type="button" class="btn btn-warning" @click="deleteFromTrylist(business)"><small>Delete from Trylist</small></button>
-            </div>
         </b-card>
   </div>
 </template>

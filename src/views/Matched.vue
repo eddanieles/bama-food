@@ -146,6 +146,9 @@ export default {
         }
     },
     beforeCreate() {
+        this.$store.dispatch('getFavorites', this.$store.state.userProfile.id);
+        this.$store.dispatch('getTryList', this.$store.state.userProfile.id);
+
         let that = this;
 
         usersCollection.doc(this.$route.params.id)
