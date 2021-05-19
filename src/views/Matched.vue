@@ -3,7 +3,7 @@
         <user-card :user="this.friend" />
 
         <hr>
-        <p>Matched Cuisine(s) from most in the mood for, to least: </p>
+        <p>{{this.matchedCuisines.length}} matched cuisine(s) from most in the mood for, to least: </p>
 
         <div v-if="this.matchedCuisines[0]">
             <div v-for="cuisine in this.matchedCuisines" :key="cuisine.index">
