@@ -25,18 +25,18 @@
       </template>
 
       <v-list>
-        <v-list-item>My Profile</v-list-item>
-        <v-list-item>My Balance</v-list-item>
-        <v-list-item>Inbox</v-list-item>
-        <v-list-item>Account Setting</v-list-item>
-        <v-list-item @click="logout">Logout</v-list-item>
+        <v-list-item><router-link to="/profile">My Profile</router-link></v-list-item>
+        <v-list-item>Placeholder</v-list-item>
+        <v-list-item>Placeholder</v-list-item>
+        <v-list-item @click="logout">{{this.$store.state.userProfile.id ? "Logout" : "Login"}}</v-list-item>
       </v-list>
     </v-menu>
   </v-app-bar>
 </template>
+
 <script>
-// Utilities
 import { mapState, mapMutations } from "vuex";
+
 export default {
   name: "Header",
 
@@ -48,11 +48,11 @@ export default {
       default: false
     }
   },
-  data: () => ({
-    href() {
-      return undefined;
+  data() {
+    return {
+     
     }
-  }),
+  },
 
   computed: {
     ...mapState(["Sidebar_drawer"])

@@ -20,32 +20,44 @@ const routes = [
             {
                 name: 'Home',
                 path: 'home',
-                component: Home,
+                component: Home
             },
             {
                 name: 'Login',
                 path: 'login',
-                component: Login,
+                component: Login
             },
             {
                 name: 'User Dashboard',
                 path: 'dashboard',
                 component: Dashboard,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 name: 'Friends',
                 path: 'friends',
                 component: Friends,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 name: 'Matched',
                 path: 'friends/:id',
                 component: Matched,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 name: 'Profile',
                 path: 'profile',
                 component: Profile,
+                meta: {
+                    requiresAuth: true
+                }
             }
         ]
     },
