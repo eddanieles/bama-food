@@ -3,6 +3,26 @@
         <user-card :user="this.friend" />
 
         <hr>
+        <v-row>
+            <v-col cols="8">
+                <v-autocomplete
+                    @change="onChange(searchTerms)"
+                    label="choose a cuisine..."
+                    :filter="this.customFilter"
+                    :items="this.options"
+                    v-model="searchTerms"
+                ></v-autocomplete>
+            </v-col>
+
+            <v-col cols="4">
+                 <button @click="onChange(_self.searchTerms)" class="btn btn-light" v-if="this.searchTerms && this.selectedFavorite.name">Find Another</button>
+            </v-col>
+        </v-row>
+
+        
+       
+
+        <hr>
         <p>{{this.matchedCuisines.length}} matched cuisine(s) from most in the mood for, to least: </p>
 
         <div v-if="this.matchedCuisines[0]">
@@ -15,7 +35,6 @@
                     <button class="btn btn-secondary" @click="_self.getNearby(cuisine.cuisineObj.alias)">Get from Nearby</button>
                 </b-collapse>
             </div>
-            
         </div>
 
         <div v-else>
@@ -54,13 +73,15 @@ import UserCard from '../components/UserCard.vue'
 import BusinessCard from '../components/BusinessCard.vue'
 
 export default {
-  components: { UserCard, BusinessCard },
+    components: { UserCard, BusinessCard },
     data() {
         return {
             friend: {},
             matchedCuisines: [],
             selectedFavorite: false,
-            matchedHelperText: ""
+            matchedHelperText: "",
+            searchTerms: '',
+            options: json.categories.map(category => category.title)
         }
     },
     methods: {
@@ -120,12 +141,13 @@ export default {
         },
         getNearby(cuisine) {
             let that = this;
-            
+
             let searchTerms = {
                 latitude: this.$store.state.latitude,
                 longitude: this.$store.state.longitude,
                 radius: 5000,
-                term: cuisine
+                term: cuisine,
+                categories: "food,restaurants"
             };
 
             this.$store.dispatch('businessSearch', searchTerms)
@@ -143,6 +165,19 @@ export default {
                         that.selectedFavorite = that.$store.state.searchResults.businesses[index];
                     }
                 })
+        },
+        onChange(terms) {
+            var categoryObject = _.find(json.categories, category => {
+                return category.title === terms;
+            })
+            
+            this.getNearby(categoryObject.alias);
+        },
+        customFilter (item, queryText) {
+            const textTwo = item.toLowerCase()
+            const searchText = queryText.toLowerCase()
+
+            return textTwo.indexOf(searchText) > -1
         }
     },
     beforeCreate() {
