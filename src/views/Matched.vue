@@ -1,6 +1,8 @@
 <template>
   <div>
         <user-card :user="this.friend" />
+
+        <hr>
         <p>Matched Cuisine(s) from most in the mood for, to least: </p>
 
         <div v-if="this.matchedCuisines[0]">
@@ -13,10 +15,18 @@
                     <button class="btn btn-secondary">Get from Nearby</button>
                 </b-collapse>
             </div>
-
-            <div>
-                {{_self.matchedFavorites[0] ? _self.matchedFavorites : ""}}
+            
+            <hr>
+            <div v-if="this.selectedFavorite">
+                <div v-if="this.selectedFavorite.name">
+                    <p>{{this.matchedFavoritesLength ? `There are ${this.matchedFavoritesLength} matches in your and your friend's favorites.` : ""}}</p>
+                    <business-card :business="this.selectedFavorite" />
+                </div>
+                <div v-else>
+                    {{this.selectedFavorite}}
+                </div>
             </div>
+            
         </div>
 
         <div v-else>
@@ -31,14 +41,16 @@ import { usersCollection, favoritesCollection } from '../firebase'
 import _ from 'underscore'
 // import json from '../components/categories.json'
 import UserCard from '../components/UserCard.vue'
+import BusinessCard from '../components/BusinessCard.vue'
 
 export default {
-  components: { UserCard },
+  components: { UserCard, BusinessCard },
     data() {
         return {
             friend: {},
             matchedCuisines: [],
-            matchedFavorites: []
+            selectedFavorite: false,
+            matchedFavoritesLength: ""
         }
     },
     methods: {
@@ -57,15 +69,33 @@ export default {
                             // doc.data() is never undefined for query doc snapshots
                             friendFilteredFavorites.push(doc.data())
                         });
-                    })
+                    });
                         
-            var matches = _.intersection(myFilteredFavorites.map(favorite => favorite.yelpBusinessId), friendFilteredFavorites.map(favorite => favorite.yelpBusinessId))
+            var matches = _.intersection(myFilteredFavorites.map(favorite => favorite.yelpBusinessId), friendFilteredFavorites.map(favorite => favorite.yelpBusinessId));
             
-            this.matchedFavorites = myFilteredFavorites.filter(favorite => {
+            if (matches.length > 1) {
+                var matchedFavorites = myFilteredFavorites.filter(favorite => {
                     if (_.contains(matches, favorite.yelpBusinessId)) {
                         return favorite;
                     }
                 }) 
+
+                let index = _.random(0, matches.length - 1);
+
+                this.matchedFavoritesLength = matches.length;
+                this.selectedFavorite = matchedFavorites[index];
+            }
+            else if (matches.length === 1) {
+                myFilteredFavorites.filter(favorite => {
+                    if (favorite.yelpBusinessId === matches[0]) {
+                        this.matchedFavoritesLength = matches.length;
+                        this.selectedFavorite = favorite;
+                    }
+                }) 
+            }
+            else {
+                this.selectedFavorite = "There are 0 matches between your favorites and your friend's favorites."
+            }
         }
     },
     beforeCreate() {
