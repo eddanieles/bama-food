@@ -8,9 +8,7 @@
             <p class="fw-lighter fst-italic">You have 0 friends in your network.</p> 
         </div>
         <div v-for="friend in this.friends" :key="friend.id">
-            <router-link :to="`/friends/${friend.id}`">
-                <user-card :user=friend />
-            </router-link>
+            <user-card :user=friend :friendLinks="true" />
         </div>
 
         <h1>All Users</h1>

@@ -20,14 +20,36 @@
           </div>
         </b-col>
       </b-row>
+
+      <b-row no-gutters v-if="friendLinks">
+        <button class="btn btn-info">Remove Friend</button>
+        <router-link :to="`/friends/${user.id}`" class="findLink">Find a restaurant...</router-link>
+      </b-row>
+      <b-row no-gutters v-else>
+        <button class="btn btn-primary" @click="addFriend(user.id)">Add Friend</button>
+      </b-row>
     </b-card>
   </div>
 </template>
 
 <script>
-export default {
-    props: ['user']
+import { firebase } from '@firebase/app'
+import { networkCollection } from '../firebase' 
 
+export default {
+    props: ['user', 'friendLinks'],
+    methods: {
+      addFriend(userId) {
+        // console.log("userId", userId)
+        // console.log("me", this.$store.state.userProfile.id)
+
+        networkCollection
+          .doc(this.$store.state.userProfile.id)
+          .update({
+            friends: firebase.firestore.FieldValue.arrayUnion(userId)
+          })
+      }
+    }
 }
 </script>
 
@@ -48,4 +70,9 @@ export default {
   text-align: center;
   font-size: small;
 }
+
+.findLink {
+  text-align: right;
+}
+
 </style>
