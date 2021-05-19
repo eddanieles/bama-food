@@ -64,7 +64,8 @@ export default {
             event.preventDefault();
             let params = {
                 term: this.searchTerms,
-                location: this.location
+                location: this.location,
+                categories: "food,restaurants"
             }
             this.$store.dispatch('businessSearch', params);
         },

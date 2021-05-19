@@ -23,7 +23,7 @@ export default {
             longitude: this.$store.state.longitude,
             attributes: "hot_and_new",
             radius: 8050,
-            categories: "food,restaurants",
+            categories: "food,restaurants"
             // open_now: true
         };
         this.$store.dispatch('businessSearch', searchTerms);
