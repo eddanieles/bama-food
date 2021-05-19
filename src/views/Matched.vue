@@ -8,10 +8,14 @@
                 <v-icon v-b-toggle="`collapse-${cuisine.index}`">mdi-format-list-bulleted-square</v-icon>
                 <big><span class="text-uppercase">{{cuisine.cuisineObj.title}}: </span></big>
                 <b-collapse :id="`collapse-${cuisine.index}`" class="mt-2">
-                    <button class="btn btn-success">Get from Favorites</button>
+                    <button class="btn btn-success" @click="_self.getFavorites(cuisine)">Get from Favorites</button>
                     <button class="btn btn-primary">Get from Trylist</button>
                     <button class="btn btn-secondary">Get from Nearby</button>
                 </b-collapse>
+            </div>
+
+            <div>
+                {{_self.matchedFavorites[0] ? _self.matchedFavorites : ""}}
             </div>
         </div>
 
@@ -23,7 +27,7 @@
 
 <script>
 
-import { usersCollection } from '../firebase'
+import { usersCollection, favoritesCollection } from '../firebase'
 import _ from 'underscore'
 // import json from '../components/categories.json'
 import UserCard from '../components/UserCard.vue'
@@ -34,12 +38,35 @@ export default {
         return {
             friend: {},
             matchedCuisines: [],
-            matchedFavorite: {},
-            show: false
+            matchedFavorites: []
         }
     },
     methods: {
+        async getFavorites(cuisine) {
+            var myFilteredFavorites = this.$store.state.userFavorites.filter(favorite => {
+                    if (_.contains(favorite.categories.map(category => category.alias), cuisine.cuisineObj.alias)) {
+                        return favorite;
+                    }
+                });
 
+            var friendFilteredFavorites = [];
+            await favoritesCollection.where("userId", "==", this.friend.id).where("categories", "array-contains", cuisine.cuisineObj)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            // doc.data() is never undefined for query doc snapshots
+                            friendFilteredFavorites.push(doc.data())
+                        });
+                    })
+                        
+            var matches = _.intersection(myFilteredFavorites.map(favorite => favorite.yelpBusinessId), friendFilteredFavorites.map(favorite => favorite.yelpBusinessId))
+            
+            this.matchedFavorites = myFilteredFavorites.filter(favorite => {
+                    if (_.contains(matches, favorite.yelpBusinessId)) {
+                        return favorite;
+                    }
+                }) 
+        }
     },
     beforeCreate() {
         let that = this;
