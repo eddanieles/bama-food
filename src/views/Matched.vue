@@ -31,6 +31,16 @@
 
         <div v-else>
             <big><span>You have 0 matched cuisines with {{this.friend.firstName}}.</span></big>
+            <div>Select from {{this.friend.firstName}} {{this.friend.lastName}} perference's:</div>
+            <div v-for="cuisine in this.friend.inMoodFor" :key="cuisine.alias">
+                <v-icon v-b-toggle="`collapse-${cuisine.alias}`">mdi-format-list-bulleted-square</v-icon>
+                <big><span class="text-uppercase">{{cuisine.title}}: </span></big>
+                <b-collapse :id="`collapse-${cuisine.alias}`" class="mt-2">
+                    <button class="btn btn-success" @click="_self.getMatch(cuisine.alias, 'favorites')">Get from Favorites</button> | 
+                    <button class="btn btn-primary" @click="_self.getMatch(cuisine.alias, 'trylist')">Get from Trylist</button> | 
+                    <button class="btn btn-secondary" @click="_self.getNearby(cuisine.alias)">Get from Nearby</button>
+                </b-collapse>
+            </div>
         </div>
   </div>
 </template>
