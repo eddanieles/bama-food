@@ -42,8 +42,6 @@ export default {
 
 .userCardName {
   text-align: center;
-  font-size: x-large;
-  font-weight: bold;
-  text-decoration: underline;
+  font-size: small;
 }
 </style>
