@@ -137,6 +137,9 @@ export default new Vuex.Store({
             // change route to dashboard
             router.push('/home')
         },
+        async updatedUserProfile({ commit }, user) {
+            commit('setUserProfile', user);
+        },
         async logout({ commit }) {
             // log user out
             await fb.auth.signOut()

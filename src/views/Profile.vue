@@ -5,7 +5,7 @@
         <v-card>
           <v-card-text class="text-center pa-7">
             <img
-              src="https://randomuser.me/api/portraits/men/81.jpg"
+              src="https://i.ytimg.com/vi/e67z7TH8R2Y/hqdefault.jpg"
               alt="user"
               width="150px"
               class="img-fluid rounded-circle shadow-sm"

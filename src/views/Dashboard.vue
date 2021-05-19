@@ -91,6 +91,7 @@ export default {
             return textTwo.indexOf(searchText) > -1
         },
         onChange(index, terms) {
+            let that = this;
             event.preventDefault();
             var categoryObject = _.find(json.categories, category => {
                 return category.title === terms;
@@ -99,16 +100,28 @@ export default {
             let cacheMoodArr = this.$store.state.userProfile.inMoodFor;
             cacheMoodArr[index] = categoryObject;
 
-            
-
             var userRef = usersCollection.doc(this.$store.state.userProfile.id);
-            return userRef.update({
-                inMoodFor: cacheMoodArr
-            })
-            .catch((error) => {
-                // The document probably doesn't exist.
-                console.error("Error updating document: ", error);
+            userRef.update({
+                    inMoodFor: cacheMoodArr
+                })
+                .catch((error) => {
+                    // The document probably doesn't exist.
+                    console.error("Error updating document: ", error);
+                });
+
+            userRef.get().then((doc) => {
+                if (doc.exists) {
+                    let user = doc.data();
+                    user.id = doc.id;
+                    that.$store.dispatch('updatedUserProfile', user)
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
             });
+
         }
     },
     beforeCreate() {
