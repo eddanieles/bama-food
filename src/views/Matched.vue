@@ -10,8 +10,8 @@
                 <v-icon v-b-toggle="`collapse-${cuisine.index}`">mdi-format-list-bulleted-square</v-icon>
                 <big><span class="text-uppercase">{{cuisine.cuisineObj.title}}: </span></big>
                 <b-collapse :id="`collapse-${cuisine.index}`" class="mt-2">
-                    <button class="btn btn-success" @click="_self.getFavorites(cuisine)">Get from Favorites</button>
-                    <button class="btn btn-primary">Get from Trylist</button>
+                    <button class="btn btn-success" @click="_self.getMatch(cuisine, 'favorites')">Get from Favorites</button> | 
+                    <button class="btn btn-primary" @click="_self.getMatch(cuisine, 'trylist')">Get from Trylist</button> | 
                     <button class="btn btn-secondary">Get from Nearby</button>
                 </b-collapse>
             </div>
@@ -19,7 +19,7 @@
             <hr>
             <div v-if="this.selectedFavorite">
                 <div v-if="this.selectedFavorite.name">
-                    <p>{{this.matchedFavoritesLength ? `There are ${this.matchedFavoritesLength} matches in your and your friend's favorites.` : ""}}</p>
+                    <p>{{this.matchedFavoritesLength ? `There are ${this.matchedFavoritesLength} matches in your and your friend's list.` : ""}}</p>
                     <business-card :business="this.selectedFavorite" />
                 </div>
                 <div v-else>
@@ -37,7 +37,7 @@
 
 <script>
 
-import { usersCollection, favoritesCollection } from '../firebase'
+import { usersCollection, favoritesCollection, trylistCollection } from '../firebase'
 import _ from 'underscore'
 // import json from '../components/categories.json'
 import UserCard from '../components/UserCard.vue'
@@ -54,15 +54,22 @@ export default {
         }
     },
     methods: {
-        async getFavorites(cuisine) {
-            var myFilteredFavorites = this.$store.state.userFavorites.filter(favorite => {
+        async getMatch(cuisine, list) {
+            if (list == 'favorites') {
+                var stateList = this.$store.state.userFavorites;
+                var collection = favoritesCollection;
+            } else if (list == 'trylist') {
+                stateList = this.$store.state.userTrylist;
+                collection = trylistCollection;
+            }
+            var myFilteredFavorites = stateList.filter(favorite => {
                     if (_.contains(favorite.categories.map(category => category.alias), cuisine.cuisineObj.alias)) {
                         return favorite;
                     }
                 });
 
             var friendFilteredFavorites = [];
-            await favoritesCollection.where("userId", "==", this.friend.id).where("categories", "array-contains", cuisine.cuisineObj)
+            await collection.where("userId", "==", this.friend.id).where("categories", "array-contains", cuisine.cuisineObj)
                     .get()
                     .then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
@@ -94,7 +101,7 @@ export default {
                 }) 
             }
             else {
-                this.selectedFavorite = "There are 0 matches between your favorites and your friend's favorites."
+                this.selectedFavorite = `There are 0 matches between your ${list} and your friend's ${list}.`;
             }
         }
     },
