@@ -35,7 +35,7 @@
         <hr>
         <div v-if="this.selectedFavorite">
             <div v-if="this.selectedFavorite.name">
-                <p>{{this.matchedFavoritesLength}}</p>
+                <p>{{this.matchedHelperText}}</p>
                 <business-card :business="this.selectedFavorite" />
             </div>
             <div v-else>
@@ -60,7 +60,7 @@ export default {
             friend: {},
             matchedCuisines: [],
             selectedFavorite: false,
-            matchedFavoritesLength: ""
+            matchedHelperText: ""
         }
     },
     methods: {
@@ -103,13 +103,13 @@ export default {
 
                 let index = _.random(0, matches.length - 1);
 
-                this.matchedFavoritesLength = `There are ${matches.length} matches for ${categoryObject.title.toLowerCase()} between your ${list} and your friend's ${list}`;
+                this.matchedHelperText = `There are ${matches.length} matches for ${categoryObject.title.toLowerCase()} between your ${list} and your friend's ${list}`;
                 this.selectedFavorite = matchedFavorites[index];
             }
             else if (matches.length === 1) {
                 myFilteredFavorites.filter(favorite => {
                     if (favorite.yelpBusinessId === matches[0]) {
-                        this.matchedFavoritesLength = `There are ${matches.length} matches for ${categoryObject.title.toLowerCase()} between your ${list} and your friend's ${list}`;
+                        this.matchedHelperText = `There are ${matches.length} matches for ${categoryObject.title.toLowerCase()} between your ${list} and your friend's ${list}`;
                         this.selectedFavorite = favorite;
                     }
                 }) 
@@ -134,7 +134,7 @@ export default {
                     var categoryObject = _.find(json.categories, category => {
                         return category.alias === cuisine;
                     })
-                    that.matchedFavoritesLength = `There are ${that.$store.state.searchResults.total} ${categoryObject.title.toLowerCase()} restaurants within three miles.`;
+                    that.matchedHelperText = `There are ${that.$store.state.searchResults.total} ${categoryObject.title.toLowerCase()} restaurants within three miles.`;
 
                     if (that.$store.state.searchResults.total == 0) {
                         that.selectedFavorite = `No results for ${categoryObject.title.toLowerCase()} within 3 miles`;
