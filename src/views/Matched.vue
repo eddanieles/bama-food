@@ -10,21 +10,10 @@
                 <v-icon v-b-toggle="`collapse-${cuisine.index}`">mdi-format-list-bulleted-square</v-icon>
                 <big><span class="text-uppercase">{{cuisine.cuisineObj.title}}: </span></big>
                 <b-collapse :id="`collapse-${cuisine.index}`" class="mt-2">
-                    <button class="btn btn-success" @click="_self.getMatch(cuisine, 'favorites')">Get from Favorites</button> | 
-                    <button class="btn btn-primary" @click="_self.getMatch(cuisine, 'trylist')">Get from Trylist</button> | 
-                    <button class="btn btn-secondary" @click="_self.getNearby(cuisine)">Get from Nearby</button>
+                    <button class="btn btn-success" @click="_self.getMatch(cuisine.cuisineObj.alias, 'favorites')">Get from Favorites</button> | 
+                    <button class="btn btn-primary" @click="_self.getMatch(cuisine.cuisineObj.alias, 'trylist')">Get from Trylist</button> | 
+                    <button class="btn btn-secondary" @click="_self.getNearby(cuisine.cuisineObj.alias)">Get from Nearby</button>
                 </b-collapse>
-            </div>
-            
-            <hr>
-            <div v-if="this.selectedFavorite">
-                <div v-if="this.selectedFavorite.name">
-                    <p>{{this.matchedFavoritesLength}}</p>
-                    <business-card :business="this.selectedFavorite" />
-                </div>
-                <div v-else>
-                    {{this.selectedFavorite}}
-                </div>
             </div>
             
         </div>
@@ -42,6 +31,17 @@
                 </b-collapse>
             </div>
         </div>
+
+        <hr>
+        <div v-if="this.selectedFavorite">
+            <div v-if="this.selectedFavorite.name">
+                <p>{{this.matchedFavoritesLength}}</p>
+                <business-card :business="this.selectedFavorite" />
+            </div>
+            <div v-else>
+                {{this.selectedFavorite}}
+            </div>
+        </div>
   </div>
 </template>
 
@@ -49,7 +49,7 @@
 
 import { usersCollection, favoritesCollection, trylistCollection } from '../firebase'
 import _ from 'underscore'
-// import json from '../components/categories.json'
+import json from '../components/categories.json'
 import UserCard from '../components/UserCard.vue'
 import BusinessCard from '../components/BusinessCard.vue'
 
@@ -73,13 +73,17 @@ export default {
                 collection = trylistCollection;
             }
             var myFilteredFavorites = stateList.filter(favorite => {
-                    if (_.contains(favorite.categories.map(category => category.alias), cuisine.cuisineObj.alias)) {
+                    if (_.contains(favorite.categories.map(category => category.alias), cuisine)) {
                         return favorite;
                     }
                 });
 
+            var categoryObject = _.find(json.categories, category => {
+                return category.alias === cuisine;
+            })
+
             var friendFilteredFavorites = [];
-            await collection.where("userId", "==", this.friend.id).where("categories", "array-contains", cuisine.cuisineObj)
+            await collection.where("userId", "==", this.friend.id).where("categories", "array-contains", categoryObject)
                     .get()
                     .then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
@@ -99,19 +103,19 @@ export default {
 
                 let index = _.random(0, matches.length - 1);
 
-                this.matchedFavoritesLength = `There are ${matches.length} matches for ${cuisine.cuisineObj.title.toLowerCase()} between your ${list} and your friend's ${list}`;
+                this.matchedFavoritesLength = `There are ${matches.length} matches for ${categoryObject.title.toLowerCase()} between your ${list} and your friend's ${list}`;
                 this.selectedFavorite = matchedFavorites[index];
             }
             else if (matches.length === 1) {
                 myFilteredFavorites.filter(favorite => {
                     if (favorite.yelpBusinessId === matches[0]) {
-                        this.matchedFavoritesLength = `There are ${matches.length} matches for ${cuisine.cuisineObj.title.toLowerCase()} between your ${list} and your friend's ${list}`;
+                        this.matchedFavoritesLength = `There are ${matches.length} matches for ${categoryObject.title.toLowerCase()} between your ${list} and your friend's ${list}`;
                         this.selectedFavorite = favorite;
                     }
                 }) 
             }
             else {
-                this.selectedFavorite = `There are 0 matches for ${cuisine.cuisineObj.title.toLowerCase()} between your ${list} and your friend's ${list}.`;
+                this.selectedFavorite = `There are 0 matches for ${categoryObject.title.toLowerCase()} between your ${list} and your friend's ${list}.`;
             }
         },
         getNearby(cuisine) {
@@ -120,15 +124,22 @@ export default {
                 latitude: this.$store.state.latitude,
                 longitude: this.$store.state.longitude,
                 radius: 5000,
-                term: cuisine.cuisineObj.alias
+                term: cuisine
             };
 
             this.$store.dispatch('businessSearch', searchTerms)
                 .then(() => {
-                    that.matchedFavoritesLength = `There are ${that.$store.state.searchResults.total} ${cuisine.cuisineObj.title.toLowerCase()} restaurants within three miles.`;
+                    var categoryObject = _.find(json.categories, category => {
+                        return category.alias === cuisine;
+                    })
+                    that.matchedFavoritesLength = `There are ${that.$store.state.searchResults.total} ${categoryObject.title.toLowerCase()} restaurants within three miles.`;
 
-                    let index = _.random(0, that.$store.state.searchResults.businesses.length - 1);
-                    that.selectedFavorite = that.$store.state.searchResults.businesses[index];
+                    if (that.$store.state.searchResults.total == 0) {
+                        that.selectedFavorite = `No results for ${categoryObject.title.toLowerCase()} within 3 miles`;
+                    } else {
+                        let index = _.random(0, that.$store.state.searchResults.businesses.length - 1);
+                        that.selectedFavorite = that.$store.state.searchResults.businesses[index];
+                    }
                 })
 
 
