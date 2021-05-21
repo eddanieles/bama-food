@@ -22,7 +22,7 @@
       </b-row>
 
       <b-row no-gutters v-if="friendLinks">
-        <button class="btn btn-info">Remove Friend</button>
+        <button class="btn btn-info" @click="removeFriend(user.id)">Remove Friend</button>
         <router-link :to="`/friends/${user.id}`" class="findLink">Find a restaurant...</router-link>
       </b-row>
       <b-row no-gutters v-else>
@@ -40,13 +40,17 @@ export default {
     props: ['user', 'friendLinks'],
     methods: {
       addFriend(userId) {
-        // console.log("userId", userId)
-        // console.log("me", this.$store.state.userProfile.id)
-
         networkCollection
           .doc(this.$store.state.userProfile.id)
           .update({
             friends: firebase.firestore.FieldValue.arrayUnion(userId)
+          })
+      },
+      removeFriend(userId) {
+        networkCollection
+          .doc(this.$store.state.userProfile.id)
+          .update({
+            friends: firebase.firestore.FieldValue.arrayRemove(userId)
           })
       }
     }
