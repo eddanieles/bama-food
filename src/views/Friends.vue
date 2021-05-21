@@ -43,7 +43,6 @@ export default {
                     .doc(friend)
                     .get()
                     .then((doc) => {
-                        console.log(doc.id, " => ", doc.data());
                         let parsedUser = doc.data();
                         parsedUser.id = doc.id;
                         that.friends.push(parsedUser);
@@ -51,7 +50,21 @@ export default {
                         console.log("Error getting document:", error);
                     });
                 })
-            }).catch((error) => {
+            })
+            .then(() => {
+                usersCollection.get().then((querySnapshot) => {
+                    let friendsIds = that.friends.map(friend => friend.id);
+                    querySnapshot.forEach((doc) => {
+                        if (!friendsIds.includes(doc.id)) {
+                            let parsedUser = doc.data();
+                            parsedUser.id = doc.id;
+                            that.allUsers.push(parsedUser);
+                        }
+                        
+                    });
+                });
+            })
+            .catch((error) => {
                 console.log("Error getting document:", error);
                 usersCollection.get().then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
