@@ -47,11 +47,7 @@ export default {
                             
                             if (doc.id === friend) {
                                 that.friends.push(parsedUser);
-                            } else if (doc.id === that.$store.state.userProfile.id) {
-                                return
-                            } else {
-                                that.allUsers.push(parsedUser);
-                            }
+                            } 
                         });
                     }).catch((error) => {
                         console.log("Error getting document:", error);
