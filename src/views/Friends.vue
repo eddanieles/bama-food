@@ -39,16 +39,14 @@ export default {
             .get()
             .then((doc) => {
                 doc.data().friends.map(async friend => {
-                    await usersCollection.get().then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            // console.log(doc.id, " => ", doc.data());
-                            let parsedUser = doc.data();
-                            parsedUser.id = doc.id;
-                            
-                            if (doc.id === friend) {
-                                that.friends.push(parsedUser);
-                            } 
-                        });
+                    await usersCollection
+                    .doc(friend)
+                    .get()
+                    .then((doc) => {
+                        console.log(doc.id, " => ", doc.data());
+                        let parsedUser = doc.data();
+                        parsedUser.id = doc.id;
+                        that.friends.push(parsedUser);
                     }).catch((error) => {
                         console.log("Error getting document:", error);
                     });
