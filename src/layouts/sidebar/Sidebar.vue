@@ -66,11 +66,6 @@ export default {
         to: "/home"
       },
       {
-        title: "Profile",
-        icon: "mdi-account-circle",
-        to: "/profile"
-      },
-      {
         title: "User Dashboard",
         icon: "mdi-view-dashboard",
         to: "/dashboard"
