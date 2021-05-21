@@ -55,7 +55,7 @@ export default {
                 usersCollection.get().then((querySnapshot) => {
                     let friendsIds = that.friends.map(friend => friend.id);
                     querySnapshot.forEach((doc) => {
-                        if (!friendsIds.includes(doc.id)) {
+                        if (!friendsIds.includes(doc.id) && doc.id != that.$store.state.userProfile.id) {
                             let parsedUser = doc.data();
                             parsedUser.id = doc.id;
                             that.allUsers.push(parsedUser);
