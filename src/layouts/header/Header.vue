@@ -6,7 +6,7 @@
           <img src="../../assets/logo-light-icon.png" />
         </span>
         <span class="logo-text ml-2">
-          <img src="../../assets/logo-light-text.png" class="mt-2" />
+          <img src="../../assets/bamalogo.png" class="mt-2" width="200px"/>
         </span>
       </router-link>
     </v-toolbar-title>
@@ -26,8 +26,6 @@
 
       <v-list>
         <v-list-item><router-link to="/profile">My Profile</router-link></v-list-item>
-        <v-list-item>Placeholder</v-list-item>
-        <v-list-item>Placeholder</v-list-item>
         <v-list-item @click="logout">{{this.$store.state.userProfile.id ? "Logout" : "Login"}}</v-list-item>
       </v-list>
     </v-menu>
