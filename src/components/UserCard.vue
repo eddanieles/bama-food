@@ -22,11 +22,11 @@
       </b-row>
 
       <b-row no-gutters v-if="friendLinks">
-        <button class="btn btn-info" @click="removeFriend(user.id)">Remove Friend</button>
+        <button class="btn btn-info" @click="removeFriend(user)">Remove Friend</button>
         <router-link :to="`/friends/${user.id}`" class="findLink">Find a restaurant...</router-link>
       </b-row>
       <b-row no-gutters v-else>
-        <button class="btn btn-primary" @click="addFriend(user.id)">Add Friend</button>
+        <button class="btn btn-primary" @click="addFriend(user)">Add Friend</button>
       </b-row>
     </b-card>
   </div>
@@ -36,11 +36,11 @@
 export default {
     props: ['user', 'friendLinks'],
     methods: {
-      addFriend(userId) {
-        this.$emit('add-friend', userId);
+      addFriend(user) {
+        this.$emit('add-friend', user);
       },
-      removeFriend(userId) {
-        this.$emit('remove-friend', userId);
+      removeFriend(user) {
+        this.$emit('remove-friend', user);
       }
     }
 }

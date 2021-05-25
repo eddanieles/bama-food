@@ -1,12 +1,14 @@
 <template>
   <div>
         <h1>Friends</h1>
-        <div v-if="!this.friends[0]">
+        <div v-if="this.friends.length === 0 && !this.friends[0]">
             <p class="fw-lighter fst-italic">Loading...</p> 
         </div>
         <div v-else-if="this.friends.length === 0">
             <p class="fw-lighter fst-italic">You have 0 friends in your network.</p> 
         </div>
+        
+        
         <div v-for="friend in this.friends" :key="friend.id">
             <user-card :user=friend :friendLinks="true" @remove-friend="removeFriend"/>
         </div>
@@ -33,53 +35,43 @@ export default {
         }
     },
     methods: {
-        async removeFriend(userId) {
-            let that = this;
+        async removeFriend(user) {
             networkCollection
                 .doc(this.$store.state.userProfile.id)
                 .update({
-                    friends: firebase.firestore.FieldValue.arrayRemove(userId)
+                    friends: firebase.firestore.FieldValue.arrayRemove(user.id)
                 })
 
-            await usersCollection
-                    .doc(userId)
-                    .get()
-                    .then((doc) => {
-                        let parsedUser = doc.data();
-                        parsedUser.id = doc.id;
-                        that.allUsers.push(parsedUser);
-                    })
-                    .catch((error) => {
-                        console.log("Error getting document:", error);
-                    });
+            this.allUsers.push(user)
 
-            this.friends = _.filter(this.friends, user => {
-                return user.id != userId
+            this.friends = _.filter(this.friends, friend => {
+                return friend.id != user.id
             })
         },
-        async addFriend(userId) {
+        addFriend(user) {
             let that = this;
-            networkCollection
-                .doc(this.$store.state.userProfile.id)
-                .update({
-                    friends: firebase.firestore.FieldValue.arrayUnion(userId)
-                })
+            this.friends.push(user)
 
-            await usersCollection
-                    .doc(userId)
-                    .get()
-                    .then((doc) => {
-                        let parsedUser = doc.data();
-                        parsedUser.id = doc.id;
-                        that.friends.push(parsedUser);
-                    })
-                    .catch((error) => {
-                        console.log("Error getting document:", error);
-                    });
-
-            this.allUsers = _.filter(this.allUsers, user => {
-                return user.id != userId
+            this.allUsers = _.filter(this.allUsers, profile => {
+                return profile.id != user.id
             })
+
+
+            var docRef = networkCollection.doc(this.$store.state.userProfile.id);
+            docRef.get().then((doc) => {
+                if (doc.exists) {
+                    networkCollection.doc(that.$store.state.userProfile.id).update({
+                        friends: firebase.firestore.FieldValue.arrayUnion(user.id)
+                    })
+                } else {
+                    // doc.data() will be undefined in this case
+                    networkCollection.doc(that.$store.state.userProfile.id).set({
+                        friends: [user.id]
+                    });
+                }
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
         }
     },
     beforeCreate() {
