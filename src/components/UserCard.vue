@@ -33,25 +33,14 @@
 </template>
 
 <script>
-import { firebase } from '@firebase/app'
-import { networkCollection } from '../firebase' 
-
 export default {
     props: ['user', 'friendLinks'],
     methods: {
       addFriend(userId) {
-        networkCollection
-          .doc(this.$store.state.userProfile.id)
-          .update({
-            friends: firebase.firestore.FieldValue.arrayUnion(userId)
-          })
+        this.$emit('add-friend', userId);
       },
       removeFriend(userId) {
-        networkCollection
-          .doc(this.$store.state.userProfile.id)
-          .update({
-            friends: firebase.firestore.FieldValue.arrayRemove(userId)
-          })
+        this.$emit('remove-friend', userId);
       }
     }
 }
